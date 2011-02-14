@@ -1,0 +1,10 @@
+<style>
+  h1 {
+    font-family: times;
+    font-size: 1em;
+  }
+  p {
+    font-family: times;
+    font-size: 0.9em;
+  }
+</style>

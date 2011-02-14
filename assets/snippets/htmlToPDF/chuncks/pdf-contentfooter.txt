@@ -1,0 +1,5 @@
+<div id="pdf-contentfooter">
+	<hr />
+	<p>Published by <a href="[+website+]">[+website+]</a> on [+date+], author: [+author+]</p>
+	<p>Original available at <a href="[+currentsite+]">[+pagetitle+]</a></p>
+</div>
