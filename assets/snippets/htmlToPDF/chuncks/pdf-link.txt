@@ -1,3 +1,3 @@
 <p>
-  <a href="[~~]?isPDF=true"Download">Download as PDF</a>
+  <a href="[~[!getCurrentDocID!]~]?isPDF=true"Download">Download as PDF</a>
 </p>

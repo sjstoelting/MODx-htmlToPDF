@@ -5,12 +5,12 @@
  * @name htmlToPDF
  *
  * @author Stefanie Janine Stoelting, mail@stefanie-stoelting.de
- * @link http://code.google.com/p/htmlToPDF/
- * @link http://www.stefanie-stoelting.de/phptohtml-news.html
+ * @link https://github.com/sjstoelting/MODx-htmlToPDF
+ * @link http://stefanie-stoelting.de/htmltopdf-news.html
  * @link http://www.tcpdf.org/
  * @package htmlToPDF
  * @license LGPL
- * @since 2011/02/14
+ * @since 2011/02/15
  * @version 0.1.alpha1
  */
 class htmlToPDF extends TCPDF {
@@ -185,6 +185,27 @@ class htmlToPDF extends TCPDF {
       $result = str_replace(
               '[+date+]',
               date($dateFormat, $modx->documentObject['publishedon']),
+              $result
+              );
+
+      // Replace [+publishedon+]
+      $result = str_replace(
+              '[+publishedon+]',
+              date($dateFormat, $modx->documentObject['publishedon']),
+              $result
+              );
+
+      // Replace [+editedon+]
+      $result = str_replace(
+              '[+editedon+]',
+              date($dateFormat, $modx->documentObject['editedon']),
+              $result
+              );
+
+      // Replace [+createdon+]
+      $result = str_replace(
+              '[+createdon+]',
+              date($dateFormat, $modx->documentObject['createdon']),
               $result
               );
     }

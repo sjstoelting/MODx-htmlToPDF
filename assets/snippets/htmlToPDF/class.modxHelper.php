@@ -5,8 +5,8 @@
  * @name htmlToPDF
  *
  * @author Stefanie Janine Stoelting, mail@stefanie-stoelting.de
- * @link http://code.google.com/p/htmlToPDF/
- * @link http://www.stefanie-stoelting.de/phptohtml-news.html
+ * @link https://github.com/sjstoelting/MODx-htmlToPDF
+ * @link http://stefanie-stoelting.de/htmltopdf-news.html
  * @link http://www.tcpdf.org/
  * @package htmlToPDF
  * @license LGPL
