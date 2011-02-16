@@ -1,0 +1,6 @@
+<div id="contentheader">
+  <h1>[*longtitle*]</h1>
+</div>
+<div id="content">
+  [*#content*]
+</div>

@@ -10,7 +10,7 @@
  * @link http://www.tcpdf.org/
  * @package htmlToPDF
  * @license LGPL
- * @since 2011/02/15
+ * @since 2011/02/16
  * @version 0.1.alpha1
  */
 class htmlToPDF extends TCPDF {
@@ -129,14 +129,41 @@ class htmlToPDF extends TCPDF {
    */
   private $_cssStyle = '';
 
+  /**
+   * Contains the document content
+   * @var string
+   */
+  private $_content = '';
+
+  /**
+   * Contains the date format string, default is Y-m-d.
+   * @var string
+   */
+  private $_dateFormat = 'Y-m-d';
+
+  /**
+   * Contains the information about to strip the CSS inline tags, or not. 
+   * Default is true.
+   * @var boolean
+   */
+  private $_stripCSSFromContent = true;
+
+  /**
+   * Whether the long title should be above the content, or not. Does only work
+   * with $sourceIsChunk = false in setContent. Default is true.
+   * @var boolean
+   */
+  private $_longTitleAboveContent = true;
+
 
   /**
    * Replaces placeholders in the given text and returns content.
    *
    * @global object $modx
-   * @param string $content The content where the placeholders will be replaced
-   * @param string $dateFormat The format string for date formats, default is Y-m-d
-   * @return string The content with the replaced placeholders
+   * @param string $content The content where the placeholders will be replaced.
+   * @param string $dateFormat The format string for date formats, default is
+   *               Y-m-d.
+   * @return string The content with the replaced placeholders.
    */
   private function replacePlaceholder($content, $dateFormat='Y-m-d')
   {
@@ -216,10 +243,12 @@ class htmlToPDF extends TCPDF {
   /**
    * Sets the image file for the header.
    *
-   * @param string $value The image file name with its full path, allowed file extensions are jpg, gif, or png
-   * @throws If the file does not exists
-   * @throws If the image file has no extension
-   * @throws If the file extesnions is not one of e the allowed file extensions are jpg, gif, or png
+   * @param string $value The image file name with its full path, allowed file
+   *               extensions are jpg, gif, or png.
+   * @throws If the file does not exists.
+   * @throws If the image file has no extension.
+   * @throws If the file extesnions is not one of e the allowed file extensions
+   *         are jpg, gif, or png.
    */
   public function setImageFile($value)
   {
@@ -263,17 +292,18 @@ class htmlToPDF extends TCPDF {
    *
    * @global object $modx
    * @param string $chunk The name of the chunk, that contains the header
-   * @param string $dateFormat The format string for date formats, default is Y-m-d
-   * @return string The content with the replaced placeholders
+   * @return string The content with the replaced placeholders.
    */
-  public function setHeaderText($chunk, $dateFormat='Y-m-d')
+  public function setHeaderText($chunk)
   {
     global $modx;
 
     $this->_headerText = '';
 
     if (!empty($chunk)) {
-      $this->_headerText = $this->replacePlaceholder($modx->getChunk($chunk), $dateFormat);
+      $this->_headerText = $this->replacePlaceholder(
+              $modx->getChunk($chunk),
+              $this->_dateFormat);
     }
 
     return $this->_headerText;
@@ -282,7 +312,7 @@ class htmlToPDF extends TCPDF {
   /**
    * Returns the header text.
    * 
-   * @return string The header text
+   * @return string The header text.
    */
   public function getHeaderText()
   {
@@ -292,8 +322,8 @@ class htmlToPDF extends TCPDF {
   /**
    * Sets the header font type.
    *
-   * @param string $value The name of the font for the header
-   * @throws If the given value is empty
+   * @param string $value The name of the font for the header.
+   * @throws If the given value is empty.
    */
   public function setHeaderFontType($value)
   {
@@ -317,8 +347,8 @@ class htmlToPDF extends TCPDF {
   /**
    * Sets the bold option for the header text.
    *
-   * @param boolean $value If the header font is bold, or not
-   * @throws If the given value is not a boolean
+   * @param boolean $value If the header font is bold, or not.
+   * @throws If the given value is not a boolean.
    */
   public function setHeaderFontBold($value)
   {
@@ -336,7 +366,7 @@ class htmlToPDF extends TCPDF {
   /**
    * Returns the bold shortcut.
    *
-   * @return string The bold shortcut if true, otherwise empty string
+   * @return string The bold shortcut if true, otherwise empty string.
    */
   public function getHeaderFontBold()
   {
@@ -346,8 +376,8 @@ class htmlToPDF extends TCPDF {
   /**
    * Sets the font size of the header text.
    *
-   * @param float $value The font size of the header text
-   * @throws If the given value is not a number
+   * @param float $value The font size of the header text.
+   * @throws If the given value is not a number.
    */
   public function setHeaderFontSize($value)
   {
@@ -371,8 +401,8 @@ class htmlToPDF extends TCPDF {
   /**
    * Sets the footer font type.
    *
-   * @param string $value The name of the font for the footer
-   * @throws If the given value is empty
+   * @param string $value The name of the font for the footer.
+   * @throws If the given value is empty.
    */
   public function setFooterFontType($value)
   {
@@ -384,9 +414,9 @@ class htmlToPDF extends TCPDF {
   } // setFooterFontType
 
   /**
-   * Returns the footer font type
+   * Returns the footer font type.
    * 
-   * @return string The footer font type
+   * @return string The footer font type.
    */
   public function getFooterFontType()
   {
@@ -396,8 +426,8 @@ class htmlToPDF extends TCPDF {
   /**
    * Sets the italic option for the footer text.
    *
-   * @param boolean $value If the footer font is italic, or not
-   * @throws If the given value is not a boolean
+   * @param boolean $value If the footer font is italic, or not.
+   * @throws If the given value is not a boolean.
    */
   public function setFooterFontItalic($value)
   {
@@ -415,7 +445,7 @@ class htmlToPDF extends TCPDF {
   /**
    * Returns the footer font italic.
    *
-   * @return string Empty, if false, otherwise I for italic
+   * @return string Empty, if false, otherwise I for italic.
    */
   public function getFooterFontItalic()
   {
@@ -425,7 +455,7 @@ class htmlToPDF extends TCPDF {
   /**
    * Sets the font size of the footer text.
    *
-   * @param float $value The font size of the footer text
+   * @param float $value The font size of the footer text.
    * @throws If the given value is not numeric
    */
   public function setFooterFontSize($value)
@@ -440,7 +470,7 @@ class htmlToPDF extends TCPDF {
   /**
    * Returns the footer font size.
    *
-   * @return int The footer font size
+   * @return int The footer font size.
    */
   public function getFooterFontSize()
   {
@@ -450,7 +480,7 @@ class htmlToPDF extends TCPDF {
   /**
    * Sets the page text.
    *
-   * @param string $value The footer caption text (translation) for page
+   * @param string $value The footer caption text (translation) for page.
    */
   public function setFooterPageCaption($value)
   {
@@ -460,7 +490,7 @@ class htmlToPDF extends TCPDF {
   /**
    * Sets the page number separator.
    *
-   * @param string $value Sets the separator between current page and of pages
+   * @param string $value Sets the separator between current page and of pages.
    */
   public function setFooterPageSeparator($value)
   {
@@ -470,8 +500,9 @@ class htmlToPDF extends TCPDF {
   /**
    * Sets the position of the footer from the bottom of a page.
    *
-   * @param int $value The position of the footer from the bottom of a page in mm
-   * @throws If value is not an integer
+   * @param int $value The position of the footer from the bottom of a page
+   *            in mm.
+   * @throws If value is not an integer.
    */
   public function setFooterPositionFromBottom($value)
   {
@@ -494,18 +525,19 @@ class htmlToPDF extends TCPDF {
    * in the chunk are replaced with the appropriate content.
    *
    * @global object $modx
-   * @param <type> $chunk The name of the content chunk
-   * @param <type> $dateFormat The date format, default is Y-m-d
+   * @param <type> $chunk The name of the content chunk.
    * @return string The
    */
-  public function setContentFooter($chunk, $dateFormat='Y-m-d')
+  public function setContentFooter($chunk)
   {
     global $modx;
 
     $this->_contentFooter = '';
     
     if (!empty($chunk)) {
-      $this->_contentFooter = $this->replacePlaceholder($modx->getChunk($chunk), $dateFormat);
+      $this->_contentFooter = $this->replacePlaceholder(
+              $modx->getChunk($chunk),
+              $this->_dateFormat);
     }
 
     return $this->_contentFooter;
@@ -525,7 +557,7 @@ class htmlToPDF extends TCPDF {
    * Reads the keyword from a template variable.
    * 
    * @global object $modx
-   * @param $tvName $value The name of the template variable
+   * @param $tvName $value The name of the template variable.
    */
   public function SetKeywords($tvName)
   {
@@ -533,7 +565,9 @@ class htmlToPDF extends TCPDF {
     $modxHelper = modxHelper::getInstance();
 
     if (!empty($value)) {
-      $this->_keyWords = $modxHelper->getTVContent($value, $modx->documentObject['id']);
+      $this->_keyWords = $modxHelper->getTVContent(
+              $value,
+              $modx->documentObject['id']);
     } else {
       $this->_keyWords = '';
     }
@@ -573,8 +607,8 @@ class htmlToPDF extends TCPDF {
    * the beginning or the end tag are not set, they are set here.
    *
    * @global object $modx
-   * @param string $chunk The chunk containing the CSS style
-   * @return string The CSS style for the PDF document
+   * @param string $chunk The chunk containing the CSS style.
+   * @return string The CSS style for the PDF document.
    */
   public function setCSS($chunk)
   {
@@ -601,7 +635,7 @@ class htmlToPDF extends TCPDF {
   /**
    * Returns the CSS styles for the PDF document.
    *
-   * @return string The CSS style for the PDF document
+   * @return string The CSS style for the PDF document.
    */
   public function getCSS()
   {
@@ -611,10 +645,165 @@ class htmlToPDF extends TCPDF {
   /**
    * Returns whether to use CSS style, or not.
    *
-   * @return boolean Wether to use CSS style, or not
+   * @return boolean Wether to use CSS style, or not.
    */
   public function useCSS()
   {
     return !empty($this->_cssStyle);
   } // useCSS
+
+  /**
+   * Sets the date format for all operations, handling with dates.
+   *
+   * @param string $value The format string for date formats, for example Y-m-d.
+   * @throws If $value is empty, because empty format strings are not accepted.
+   */
+  public function setDateFormat($value)
+  {
+    if (!empty($value)) {
+      $this->_dateFormat = $value;
+    } else {
+      throw new Exception('The value for the date format can\'t be empty.');
+    }
+  } // setDate
+
+  /**
+   * Returns the date format string. The default value is Y-m-d.
+   *
+   * @return string The format string for date formats, for example Y-m-d.
+   */
+  public function getDateFormat()
+  {
+    return $this->_dateFormat;
+  } // getDateFormat
+
+  /**
+   * Sets whether the inline CSS should be stripped from the  content, or not.
+   *
+   * @param boolean $value Whether the inline CSS should be stripped from the
+   *                content, or not.
+   * @throws If $value is not boolean.
+   */
+  public function setStripCSSFromContent($value)
+  {
+    if (is_bool($value)) {
+      $this->_stripCSSFromContent = $value;
+    } else {
+      throw new Exception('$value must be of type boolean.');
+    }
+  } // setStripCSSFromContent
+
+  /**
+   * Returns whether the inline CSS should be stripped from the  content,
+   * or not.
+   *
+   * @return boolean Whether the inline CSS should be stripped from the
+   *                 content, or not. Default is true.
+   */
+  public function getStripCSSFromContent()
+  {
+    return $this->_stripCSSFromContent;
+  } // getStripCSSFromContent
+
+  /**
+   * Sets Whether the long title should be in the PDF document above the
+   * content, or not.
+   *
+   * @param boolean $value Whether the long title should be in the PDF document
+   *                above the content, or not.
+   * @throws if $value is not boolean.
+   */
+  public function setLongTitleAboveContent($value)
+  {
+    if (is_bool($value)) {
+      $this->_longTitleAboveContent = $value;
+    } else {
+      throw new Exception('$value must be of type boolean.');
+    }
+  } // setLongTitleAboveContent
+
+  /**
+   * Returns whether the long title should be in the PDF document above the
+   * content, or not.
+   *
+   * @return boolean Whether the long title should be in the PDF document
+   *                above the content, or not. Default is true.
+   */
+  public function getLongTitleAboveContent()
+  {
+    return $this->_longTitleAboveContent;
+  } // getLongTitleAboveContent
+
+  /**
+   * When $sourceIsChunk is true, the variable $content should contain the name
+   * of a chunk. The chunk should contain a template in HTML style with MODx
+   * placeholders, snippets, and chunks. This works the same way, as a MODx
+   * Document, because it makes use of the MODx function to parse a document.
+   * Otherwise the content of the current document is used for the PDF content.
+   * Links are translated into links with the complete URI, because they would
+   * not work otherwise.
+   *
+   * @global object $modx
+   * @param string $content Contains the document content or the a chunk, if
+   *               $sourceIsChunk is true. Default is empty.
+   * @param boolean $sourceIsChunk Whether the content is in a chunk and
+   *                $content contains the chunk name, or not. Default is false.
+   * @return string The content for the PDF document.
+   */
+  public function setContent($sourceIsChunk=false, $content='')
+  {
+    global $modx;
+
+    $result = '';
+    $modxHelper = modxHelper::getInstance();
+
+    if ($sourceIsChunk) {
+      $chunk = $modx->getChunk($content);
+
+      // Parse the content from the chunk with the MODx functions
+      $result = $modx->parseDocumentSource($content);
+
+        // Strip inline CSS
+        if($this->_stripCSSFromContent) {
+          $result = $modxHelper->removeInlineCSS($result);
+        }
+      } else {
+        // Check, whether the long title should be above the content
+        if ($this->_longTitleAboveContent) {
+          $result = '<h1>' . $modx->documentObject['longtitle'] . "</h1>\n";
+        }
+
+        // Add the document content
+        $result .= $modx->documentObject['content'];
+
+        // Strip inline CSS
+        if($this->_stripCSSFromContent) {
+          $result = $modxHelper->removeInlineCSS($result);
+        }
+
+        // Parse the URLs and replace them to work from a PDF document,
+        // add CSS style above the content
+        // and add the content footer beneath the content
+        $result = $this->getCSS()
+                . $modxHelper->rewriteUrls($result)
+                . $this->_chunkContentFooter;
+    }
+
+
+
+    // Set the content to the class variable
+    $this->_content = $result;
+
+    return $this->_content;
+  } // setContent
+
+  /**
+   * Returns the document content.
+   *
+   * @return string The document content.
+   */
+  public function getContent()
+  {
+    return $this->_content;
+  } // getContent
 } // htmlToPDF

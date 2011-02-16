@@ -11,8 +11,9 @@
  * @link http://www.tcpdf.org/
  * @package htmlToPDF
  * @license LGPL
- * @since 2011/02/15
+ * @since 2011/02/16
  * @version 0.1.alpha1
+ * @example [!htmlToPDF? &author=`Stefanie Janine Stoelting` &tvKeywords=`documentTags` &footerPageCaption=`Page` &footerPageSeparator` of ` &headerLogo=`logo.png` &chunkContentFooter=`pdf-contentfooter` &chunkContentHeader=`pdf-header-text` &chunkStyle=`pdf-style`!]
  */
 
 // Encapsulate everything in a try
@@ -42,7 +43,7 @@ try {
 
     // Set document information
     $languageCode = isset($languageCode) ? $languageCode : 'EN';
-    $dateFormat = isset($dateFormat) ? $dateFormat : 'Y-m-d';
+    $pdf->setDateFormat(isset($dateFormat) ? $dateFormat : 'Y-m-d');
     $marginLeft = isset($marginLeft) && is_numeric($marginLeft) ? $marginLeft : 10;
     $marginRight = isset($marginRight) && is_numeric($marginRight) ? $marginRight : 10;
     $marginTop = isset($marginTop) && is_numeric($marginTop) ? $marginTop : 30;
@@ -61,10 +62,9 @@ try {
     $footerPageSeparator = isset($footerPageSeparator) ? $footerPageSeparator : ' ';
     $contentFontType = isset($contentFontType) ? $contentFontType : 'times';
     $contentFontSize = isset($contentFontSize) && is_numeric($contentFontSize) ? $contentFontSize : 10;
-    $longTitleAboveContent = isset($longTitleAboveContent) ? $longTitleAboveContent == 1 : true;
-    $stripCSSFromContent = isset($stripCSSFromContent) ? $stripCSSFromContent == 1 : true;
+    $pdf->setLongTitleAboveContent(isset($longTitleAboveContent) ? $longTitleAboveContent == 1 : true);
+    $pdf->setStripCSSFromContent(isset($stripCSSFromContent) ? $stripCSSFromContent == 1 : true);
     $rewritePDF = isset($rewritePDF) ? $rewritePDF == 1 : true;
-    //$printFooter = isset($printFooter) && is_bool($printFooter) ? $printFooter == 1: true;
 
     $pdf->SetCreator(PDF_CREATOR);
     $pdf->SetAuthor($author);
@@ -73,9 +73,14 @@ try {
     $pdf->SetKeywords($tvKeywords = isset($tvKeywords) ? $tvKeywords : '');
 
     // Set the chunk contents
-    $pdf->setHeaderText(isset($chunkContentHeader) ? $chunkContentHeader : '', $dateFormat);
-    $pdf->setContentFooter(isset($chunkContentFooter) ? $chunkContentFooter : '', $dateFormat);
+    $pdf->setHeaderText(isset($chunkContentHeader) ? $chunkContentHeader : '');
+    $pdf->setContentFooter(isset($chunkContentFooter) ? $chunkContentFooter : '');
     $pdf->setCSS(isset($chunkStyle) ? $chunkStyle : '');
+
+    // Set the content
+    $pdf->setContent(
+            isset($chunkContent) ? !empty($chunkContent) : false,
+            isset($chunkContent) ? $chunkContent : '');
 
     // Set the header data
     $pdf->SetHeaderData();
@@ -121,28 +126,8 @@ try {
     // Add a page
     $pdf->AddPage();
 
-    // Create the html content
-    $htmlContent = $modxHelper->rewriteUrls($modx->documentObject['content']);
-
-    // Remove CSS from the content to generate a clear HTML for the PDF document
-    if ($stripCSSFromContent) {
-      $htmlContent = $modxHelper->removeInlineCSS($htmlContent);
-    }
-
-    // Set the title above the content
-    if ($longTitleAboveContent) {
-      $htmlContent = '<h1>' . $modx->documentObject['longtitle'] . "</h1>\n"
-                    . $htmlContent;
-    }
-
-    // Add CSS style above the content and the content footer beneath the content
-    $htmlContent = $pdf->getCSS()
-                 . $htmlContent
-                 . $pdf->setContentFooter($chunkContentFooter, $dateFormat);
-
-
     // Output the content
-    $pdf->writeHTML($htmlContent, true, false, true, false, '');
+    $pdf->writeHTML($pdf->getContent(), true, false, true, false, '');
 
     // Reset pointer to the last page
     $pdf->lastPage();
@@ -152,6 +137,7 @@ try {
     if (!file_exists($modx->config['base_path'] . $documentName)) {
       $pdf->Output($modx->config['base_path'] . $documentName, 'F');
     } elseif ($rewritePDF) {
+
       $pdf->Output($modx->config['base_path'] . $documentName, 'F');
     }
 
