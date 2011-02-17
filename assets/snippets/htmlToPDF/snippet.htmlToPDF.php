@@ -11,9 +11,9 @@
  * @link http://www.tcpdf.org/
  * @package htmlToPDF
  * @license LGPL
- * @since 2011/02/16
+ * @since 2011/02/17
  * @version 0.1.alpha1
- * @example [!htmlToPDF? &author=`Stefanie Janine Stoelting` &tvKeywords=`documentTags` &footerPageCaption=`Page` &footerPageSeparator` of ` &headerLogo=`logo.png` &chunkContentFooter=`pdf-contentfooter` &chunkContentHeader=`pdf-header-text` &chunkStyle=`pdf-style`!]
+ * @example [!htmlToPDF? &author=`Stefanie Janine Stoelting` &tvKeywords=`documentTags` &headerLogo=`logo.png` &chunkContentFooter=`pdf-contentfooter` &chunkStandardHeader=`pdf-header-text` &chunkStyle=`pdf-style`!]
  */
 
 // Encapsulate everything in a try
@@ -53,10 +53,10 @@ try {
     $pdf->setHeaderFontType(isset($headerFontType) ? $headerFontType : htmlToPDF::DEFAULT_FONT_TYPE);
     $pdf->setHeaderFontSize(isset($headerFontSize) && is_numeric($headerFontSize) ? $headerFontSize : htmlToPDF::DEFAULT_HEADER_FONT_SIZE);
     $pdf->setImageFile(isset($headerLogo) ? $headerLogo : '');
-    $pdf->setHeaderFontBold(isset($headerFontBold) && is_bool($headerFontBold) ? $headerFontBold : true);
+    $pdf->setHeaderFontBold(isset($headerFontBold) ? $headerFontBold == 1 : true);
     $footerPositionFromBottom = isset($footerPositionFromBottom) && is_numeric($footerPositionFromBottom) ? $footerPositionFromBottom : htmlToPDF::DEFAULT_FOOTER_POSITION_FROM_BOTTOM;
     $pdf->setFooterFontType($footerFontType = isset($footerFontType) ? $footerFontType : htmlToPDF::DEFAULT_FONT_TYPE);
-    $pdf->setFooterFontItalic(isset($footerFontItalic) && is_bool($footerFontItalic) ? $footerFontItalic : true);
+    $pdf->setFooterFontItalic(isset($footerFontItalic) ? $footerFontItalic == 1: true);
     $pdf->setFooterFontSize(isset($footerFontSize) && is_numeric($footerFontSize) ? $footerFontSize : htmlToPDF::DEFAULT_FOOTER_FONT_SIZE);
     $footerPageCaption = isset($footerPageCaption) ? $footerPageCaption : '';
     $footerPageSeparator = isset($footerPageSeparator) ? $footerPageSeparator : ' ';
@@ -64,7 +64,7 @@ try {
     $contentFontSize = isset($contentFontSize) && is_numeric($contentFontSize) ? $contentFontSize : 10;
     $pdf->setLongTitleAboveContent(isset($longTitleAboveContent) ? $longTitleAboveContent == 1 : true);
     $pdf->setStripCSSFromContent(isset($stripCSSFromContent) ? $stripCSSFromContent == 1 : true);
-    $rewritePDF = isset($rewritePDF) ? $rewritePDF == 1 : true;
+    $pdf->setRewritePDF(isset($rewritePDF) ? $rewritePDF == 1 : true);
 
     $pdf->SetCreator(PDF_CREATOR);
     $pdf->SetAuthor($author);
@@ -73,7 +73,7 @@ try {
     $pdf->SetKeywords($tvKeywords = isset($tvKeywords) ? $tvKeywords : '');
 
     // Set the chunk contents
-    $pdf->setHeaderText(isset($chunkContentHeader) ? $chunkContentHeader : '');
+    $pdf->setHeaderText(isset($chunkStandardHeader) ? $chunkStandardHeader : '');
     $pdf->setContentFooter(isset($chunkContentFooter) ? $chunkContentFooter : '');
     $pdf->setCSS(isset($chunkStyle) ? $chunkStyle : '');
 
@@ -123,26 +123,7 @@ try {
       $pdf->SetFont($contentFontType, '', $contentFontSize);
     }
 
-    // Add a page
-    $pdf->AddPage();
-
-    // Output the content
-    $pdf->writeHTML($pdf->getContent(), true, false, true, false, '');
-
-    // Reset pointer to the last page
-    $pdf->lastPage();
-
-    // Close and output PDF document
-    $documentName = 'assets/pdf/' .$modx->documentObject['alias'] . '.pdf';
-    if (!file_exists($modx->config['base_path'] . $documentName)) {
-      $pdf->Output($modx->config['base_path'] . $documentName, 'F');
-    } elseif ($rewritePDF) {
-
-      $pdf->Output($modx->config['base_path'] . $documentName, 'F');
-    }
-
-    // Relocate to the PDF document
-    header("Location: /$documentName");
+    $pdf->writeHtml();
   }
 
 // Catch all exceptions and log them into the MODx event log

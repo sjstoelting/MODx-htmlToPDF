@@ -25,4 +25,53 @@ For the snippet call you can add several chunks as templates. Examples are in
 the assets/snippets/htmlToPDF/chunks/ directory.
 
 Here is an example for a call to htmlToPDF:
-[!htmlToPDF? &author=`Stefanie Janine Stoelting` &tvKeywords=`documentTags` &footerPageCaption=`Page` &footerPageSeparator` of ` &headerLogo=`logo.png` &chunkContentFooter=`pdf-contentfooter` &chunkContentHeader=`pdf-header-text` &chunkStyle=`pdf-style`!]
+[!htmlToPDF? &author=`Stefanie Janine Stoelting` &tvKeywords=`documentTags` &headerLogo=`logo.png` &chunkContentFooter=`pdf-contentfooter` &chunkStandardHeader=`pdf-header-text` &chunkStyle=`pdf-style`!]
+
+The following paramaters are available:
+
+Name                        Description
+isPDF                       Is added to the document URI, to identify PDF calls.
+languageCode                The PDF document language code.
+setDateFormat               The date format string for all dates.
+marginLeft                  The left margin of the document.
+marginRight                 The right margin of the document.
+marginTop                   The top margin of the document.
+marginBottom                The top margin of the document.
+marginHeader                The header margin of the document.
+marginFooter                The footer margin of the document.
+headerFontType              The header font type for standard headers.
+headerFontSize              The font size for standard headers.
+headerFontBold              Whether the header font is bold, or not.
+headerLogo                  The logo for standard headers, the logo has to be in
+                            the folder assets/lib/tcpdf/images/ to be found by
+                            TCPDF.
+footerPositionFromBottom    The footer position from the bottom.
+footerFontType              The footer font type for standard footers.
+footerFontItalic            Whether the header font is italic, or not for
+                            standard footers.
+footerFontSize              The font size for standard footers.
+contentFontType             The content font type for standard content.
+contentFontSize             The font size for standard content.
+longTitleAboveContent       Whether the documents long title should be in the
+                            document above the content, or not, only for
+                            standard content.
+stripCSSFromContent         Strip in-line CSS, or not, only for standard
+                            content.
+rewritePDF                  If a PDF document exists, the document is not
+                            rewritten every time, when the PDF document is
+                            requested. This is a cache function for PDF
+                            documents.
+author                      Author for PDF document properties.
+tvKeywords                  A template variable for keywords for the PDF
+                            document properties. Keywords are comma separated,
+                            you may reuse keywords for tag clouds.
+chunkHeader                 Chunk for customized headers
+chunkContentFooter          Chunk for customized text placed under the content.
+                            For example for a link to the current document on
+                            the website inside the PDF document. Only used with
+                            standard content.
+chunkStyle                  A chunk for CSS styles in the PDF document.
+chunkContent                A chunk for individual arrangement of the content in
+                            the document.
+
+Detailed informations are available in the file parameter-descriptions.html.

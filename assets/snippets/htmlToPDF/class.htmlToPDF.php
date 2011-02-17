@@ -155,6 +155,13 @@ class htmlToPDF extends TCPDF {
    */
   private $_longTitleAboveContent = true;
 
+  /**
+   * Contains the information about whether to overwrite PDF files, if they
+   * already exists, or not. Default is true.
+   * @var boolean
+   */
+  private $_rewritePDF = true;
+
 
   /**
    * Replaces placeholders in the given text and returns content.
@@ -735,6 +742,33 @@ class htmlToPDF extends TCPDF {
   } // getLongTitleAboveContent
 
   /**
+   * Whether to overwrite existing PDF documents, or not. Set rewrite to false,
+   * to use it as a chaching mechanism. In this case you have to manually
+   * delete existing PDF files, if the document content changes.
+   *
+   * @param boolean $value Whether to overwrite an existing PDF, or not.
+   */
+  public function setRewritePDF($value)
+  {
+    if (is_bool($value)) {
+      $this->_rewritePDF = $value;
+    } else {
+      throw new Exception('$value must be of type boolean.');
+    }
+  } // setRewritePDF
+
+  /**
+   * Whether to overwrite existing PDF documents, or not.
+   *
+   * @return boolean Whether to overwrite an existing PDF, or not. Default is
+   *                 true.
+   */
+  public function getRewritePDF()
+  {
+    return $this->_rewritePDF;
+  } // getRewritePDF
+
+  /**
    * When $sourceIsChunk is true, the variable $content should contain the name
    * of a chunk. The chunk should contain a template in HTML style with MODx
    * placeholders, snippets, and chunks. This works the same way, as a MODx
@@ -806,4 +840,41 @@ class htmlToPDF extends TCPDF {
   {
     return $this->_content;
   } // getContent
+
+  /**
+   * Overwrites the original writeHTML method to implement the calls to add a
+   * new page, add the content, close with lastPage. Writes the PDF document to
+   * the output folder and relocates the header to the PDF docoument.
+   *
+   * @global object $modx
+   */
+  public function  writeHtml()
+  {
+    global $modx;
+
+    // Add a page
+    parent::AddPage();
+
+    // Output the content
+    parent::writeHTML($this->getContent(), true, false, true, false, '');
+
+    // Reset pointer to the last page
+    parent::lastPage();
+
+    // Close and output PDF document
+    $documentName = 'assets/pdf/' .$modx->documentObject['alias'] . '.pdf';
+
+    if (!file_exists($modx->config['base_path'] . $documentName)) {
+      parent::Output($modx->config['base_path'] . $documentName, 'F');
+    } elseif ($this->_rewritePDF) {
+      if (unlink($modx->config['base_path'] . $documentName)) {
+        parent::Output($modx->config['base_path'] . $documentName, 'F');
+      } else {
+        $modx->logEvent(0, 2, sprintf('The file %1$s could not be deleted, please check the rights on the PDF output folder.', $documentName), 'htmlToPDF snippet');
+      }
+    }
+
+    // Relocate to the PDF document
+    header("Location: /$documentName");
+  } // writeHTML
 } // htmlToPDF
