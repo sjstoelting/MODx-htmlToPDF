@@ -6,9 +6,8 @@ The source is licensed under the GNU Lesser General Public License, version 2.1
 as published on http://www.gnu.org/licenses/lgpl-2.1.html
 
 This MODx snippets uses TCPDF, available at http://www.tcpdf.org/, to create the
-PDF Files from the content of a web document, published with MODx. TCPDF will be
-part of the packages, that will be available beginning with the first beta
-version.
+PDF Files from the content of a web document, published with MODx. TCPDF is
+part of the package.
 
 The main goal is to create highly configurable PDF documents. This is possible
 with a lot of parameters, that one can use on a call and the usage of chunks.
