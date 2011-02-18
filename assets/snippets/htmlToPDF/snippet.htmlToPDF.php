@@ -1,7 +1,7 @@
 <?php
 /**
  * Snippet Name: htmlToPDF
- * Description: <strong>0.1.alpha1</strong>Returns the current document as PDF
+ * Description: <strong>0.1.beta1</strong>Returns the current document as PDF
  *
  * @name htmlToPDF
  *
@@ -11,8 +11,8 @@
  * @link http://www.tcpdf.org/
  * @package htmlToPDF
  * @license LGPL
- * @since 2011/02/17
- * @version 0.1.alpha1
+ * @since 2011/02/18
+ * @version 0.1.beta1
  * @example [!htmlToPDF? &author=`Stefanie Janine Stoelting` &tvKeywords=`documentTags` &headerLogo=`logo.png` &chunkContentFooter=`pdf-contentfooter` &chunkStandardHeader=`pdf-header-text` &chunkStyle=`pdf-style`!]
  */
 
@@ -28,46 +28,49 @@ try {
     require_once(MODX_BASE_PATH . 'assets/snippets/htmlToPDF/class.htmlToPDF.php');
     require_once(MODX_BASE_PATH . 'assets/snippets/htmlToPDF/class.modxHelper.php');
 
+    // Get the footer properties before the creation of the PDF object, because
+    // it is not possible to set them after the creation.
+    $footerFontType = isset($footerFontType) ? $footerFontType : htmlToPDF::DEFAULT_FONT_TYPE;
+    $footerFontItalic =isset($footerFontItalic) ? $footerFontItalic == 1: true;
+    $footerFontSize = isset($footerFontSize) && is_numeric($footerFontSize) ? $footerFontSize : htmlToPDF::DEFAULT_FOOTER_FONT_SIZE;
+    $footerChunk = isset($footerChunk) ? $footerChunk : '';
+    $footerPositionFromBottom = isset($footerPositionFromBottom) && is_numeric($footerPositionFromBottom) ? $footerPositionFromBottom : htmlToPDF::DEFAULT_FOOTER_POSITION_FROM_BOTTOM;
+
     // Create new PDF document
+
     $pdf = new htmlToPDF(
-            PDF_PAGE_ORIENTATION,
-            PDF_UNIT,
-            PDF_PAGE_FORMAT,
-            true,
-            'UTF-8',
-            false
-            );
+            $footerChunk,
+            $footerFontType,
+            $footerFontItalic,
+            $footerFontSize,
+            $footerPositionFromBottom);
 
     // Create the MODx helper
     $modxHelper = modxHelper::getInstance();
 
     // Set document information
-    $languageCode = isset($languageCode) ? $languageCode : 'EN';
+    $pdf->setLanguageArray(isset($languageCode) ? $languageCode : 'EN');
     $pdf->setDateFormat(isset($dateFormat) ? $dateFormat : 'Y-m-d');
     $marginLeft = isset($marginLeft) && is_numeric($marginLeft) ? $marginLeft : 10;
     $marginRight = isset($marginRight) && is_numeric($marginRight) ? $marginRight : 10;
     $marginTop = isset($marginTop) && is_numeric($marginTop) ? $marginTop : 30;
-    $marginBottom = isset($marginBottom) && is_numeric($marginBottom) ? $marginBottom : 25;
-    $marginHeader = isset($marginHeader) && is_numeric($marginHeader) ? $marginHeader : 5;
-    $marginFooter = isset($marginFooter) && is_numeric($marginFooter) ? $marginFooter : 10;
+    $pdf->SetAutoPageBreak(TRUE, isset($marginBottom) && is_numeric($marginBottom) ? $marginBottom : 25);
+    $pdf->SetHeaderMargin(isset($marginHeader) && is_numeric($marginHeader) ? $marginHeader : 5);
+    $pdf->SetFooterMargin(isset($marginFooter) && is_numeric($marginFooter) ? $marginFooter : 10);
     $pdf->setHeaderFontType(isset($headerFontType) ? $headerFontType : htmlToPDF::DEFAULT_FONT_TYPE);
     $pdf->setHeaderFontSize(isset($headerFontSize) && is_numeric($headerFontSize) ? $headerFontSize : htmlToPDF::DEFAULT_HEADER_FONT_SIZE);
     $pdf->setImageFile(isset($headerLogo) ? $headerLogo : '');
     $pdf->setHeaderFontBold(isset($headerFontBold) ? $headerFontBold == 1 : true);
-    $footerPositionFromBottom = isset($footerPositionFromBottom) && is_numeric($footerPositionFromBottom) ? $footerPositionFromBottom : htmlToPDF::DEFAULT_FOOTER_POSITION_FROM_BOTTOM;
-    $pdf->setFooterFontType($footerFontType = isset($footerFontType) ? $footerFontType : htmlToPDF::DEFAULT_FONT_TYPE);
-    $pdf->setFooterFontItalic(isset($footerFontItalic) ? $footerFontItalic == 1: true);
-    $pdf->setFooterFontSize(isset($footerFontSize) && is_numeric($footerFontSize) ? $footerFontSize : htmlToPDF::DEFAULT_FOOTER_FONT_SIZE);
-    $footerPageCaption = isset($footerPageCaption) ? $footerPageCaption : '';
-    $footerPageSeparator = isset($footerPageSeparator) ? $footerPageSeparator : ' ';
     $contentFontType = isset($contentFontType) ? $contentFontType : 'times';
     $contentFontSize = isset($contentFontSize) && is_numeric($contentFontSize) ? $contentFontSize : 10;
     $pdf->setLongTitleAboveContent(isset($longTitleAboveContent) ? $longTitleAboveContent == 1 : true);
     $pdf->setStripCSSFromContent(isset($stripCSSFromContent) ? $stripCSSFromContent == 1 : true);
     $pdf->setRewritePDF(isset($rewritePDF) ? $rewritePDF == 1 : true);
+    $pdf->SetDefaultMonospacedFont(isset($fontMonoSpaced) ? $fontMonoSpaced : PDF_FONT_MONOSPACED);
+    $pdf->setImageScale(isset($imageScaleRatio) ? $imageScaleRatio : PDF_IMAGE_SCALE_RATIO);
 
     $pdf->SetCreator(PDF_CREATOR);
-    $pdf->SetAuthor($author);
+    $pdf->SetAuthor(isset($author) ? $author : '');
     $pdf->SetTitle($modx->documentObject['pagetitle']);
     $pdf->SetSubject($modx->documentObject['longtitle']);
     $pdf->SetKeywords($tvKeywords = isset($tvKeywords) ? $tvKeywords : '');
@@ -101,29 +104,15 @@ try {
               $pdf->getFooterFontSize()
             ));
 
-    // Set default monospaced font
-    $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-
     // Set margins
     $pdf->SetMargins($marginLeft, $marginTop, $marginRight);
-    $pdf->SetHeaderMargin($marginHeader);
-    $pdf->SetFooterMargin($marginFooter);
-
-    // Set auto page breaks
-    $pdf->SetAutoPageBreak(TRUE, $marginBottom);
-
-    // Set image scale factor
-    $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-
-    // Set some language-dependent strings
-    $pdf->setLanguageArray($languageCode);
 
     // Set font
     if ($pdf->useCSS()) {
       $pdf->SetFont($contentFontType, '', $contentFontSize);
     }
 
-    $pdf->writeHtml();
+    $pdf->generatePDF();
   }
 
 // Catch all exceptions and log them into the MODx event log

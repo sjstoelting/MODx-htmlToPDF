@@ -10,29 +10,39 @@
  * @link http://www.tcpdf.org/
  * @package htmlToPDF
  * @license LGPL
- * @since 2011/02/16
- * @version 0.1.alpha1
+ * @since 2011/02/18
+ * @version 0.1.beta1
  */
 class htmlToPDF extends TCPDF {
   /**
-   * Constant string The default header font type
+   * Constant string The default header font type.
    */
   const DEFAULT_FONT_TYPE = 'helvetica';
 
   /**
-   * Constant int The default header font size
+   * Constant int The default header font size.
    */
   const DEFAULT_HEADER_FONT_SIZE = 16;
 
   /**
-   * Constant int The default footer font size
+   * Constant int The default footer font size.
    */
   const DEFAULT_FOOTER_FONT_SIZE = 8;
 
   /**
-   * Constant int The default position of the footer from the bottom
+   * Constant int The default position of the footer from the bottom.
    */
-  const DEFAULT_FOOTER_POSITION_FROM_BOTTOM = 15;
+  const DEFAULT_FOOTER_POSITION_FROM_BOTTOM = -15;
+
+  /**
+   * Constant string The default footer content.
+   */
+  const DEFAULT_PAGE_FOOTER_CONTENT = 'Page %1s / %2s';
+
+  /**
+   * Constant string The default date format.
+   */
+  const DEFAULT_DATE_FORMAT = 'Y-m-d';
 
   /**
    * Constant string The path to the TCPDF image folder
@@ -61,13 +71,13 @@ class htmlToPDF extends TCPDF {
    * The font type for the header, default is helvetica.
    * @var string
    */
-  private $_headerFontType = htmlToPDF::DEFAULT_FONT_TYPE;
+  private $_headerFontType;
 
   /**
    * The font size for the header text, default is 20.
    * @var int
    */
-  private $_headerFontSize = htmlToPDF::DEFAULT_HEADER_FONT_SIZE;
+  private $_headerFontSize;
 
   /**
    * Whether the header text is bold, or not, default is true.
@@ -79,13 +89,13 @@ class htmlToPDF extends TCPDF {
    * The font type for the footer, default is helvetica.
    * @var string
    */
-  private $_footerFontType = htmlToPDF::DEFAULT_FONT_TYPE;
+  private $_footerFontType;
 
   /**
    * The font size for the footer, default is 8.
    * @var int
    */
-  private $_footerFontSize = htmlToPDF::DEFAULT_FOOTER_FONT_SIZE;
+  private $_footerFontSize;
 
   /**
    * Whether the footer text is italic, or not, default is true.
@@ -109,13 +119,7 @@ class htmlToPDF extends TCPDF {
    * The footer postion from the bottom of the page in mm, default is 15 mm.
    * @var int
    */
-  private $_footerPositionFromBottom = htmlToPDF::DEFAULT_FOOTER_POSITION_FROM_BOTTOM;
-
-  /**
-   * The content footer text.
-   * @var string
-   */
-  private $_contentFooter = '';
+  private $_footerPositionFromBottom;
 
   /**
    * Contains the keywords for the document.
@@ -139,7 +143,7 @@ class htmlToPDF extends TCPDF {
    * Contains the date format string, default is Y-m-d.
    * @var string
    */
-  private $_dateFormat = 'Y-m-d';
+  private $_dateFormat;
 
   /**
    * Contains the information about to strip the CSS inline tags, or not. 
@@ -162,6 +166,82 @@ class htmlToPDF extends TCPDF {
    */
   private $_rewritePDF = true;
 
+  /**
+   * The footer text with placeholders for variables, default is
+   * 'Page $d1 / $d2'.
+   * @var string
+   */
+  private $_footerContent;
+
+
+  public function  __construct($footerChunk, $footerFont, $footerFontItalic,
+          $footerFontSize, $footerPositionFromBottom)
+  {
+    // Set default values with constants
+    $this->_headerFontType = self::DEFAULT_FONT_TYPE;
+    $this->_headerFontSize = self::DEFAULT_HEADER_FONT_SIZE;
+    $this->_footerFontType = self::DEFAULT_FONT_TYPE;
+    $this->_footerFontSize = self::DEFAULT_FOOTER_FONT_SIZE;
+    $this->_footerPositionFromBottom = self::DEFAULT_FOOTER_POSITION_FROM_BOTTOM;
+    $this->_dateFormat = self::DEFAULT_DATE_FORMAT;
+    $this->_footerContent = self::DEFAULT_PAGE_FOOTER_CONTENT;
+
+    // Set the footer option before calling the parent constructor, otherwise
+    // it is not possible, to set the footer flexible
+    $this->setFooterFontType($footerFont);
+    $this->setFooterFontSize($footerFontSize);
+    $this->setFooterFontItalic($footerFontItalic);
+    $this->setFooterPositionFromBottom($footerPositionFromBottom);
+    $this->setFooterContent($footerChunk);
+
+    parent::__construct(
+            PDF_PAGE_ORIENTATION,
+            PDF_UNIT,
+            PDF_PAGE_FORMAT,
+            true,
+            'UTF-8',
+            false);
+
+  } // __construct
+
+  /**
+   * The footer chunk may contain two placeholders, %s1 is for current page,
+   * %s2 for the count of pages. If you don't want a footer, send an '-'. If the
+   * chunk is empty, the default 'Page $s1 / $s2' is used.
+   *
+   * @global object $modx
+   * @param string $chunk The name of the chunk with the footer content.
+   */
+  private function setFooterContent($chunk)
+  {
+    global $modx;
+
+    if ($chunk == '-') {
+      // The footer ist completly empty
+      $this->_footerContent = '';
+    } else {
+      if (!empty($chunk)) {
+        // Get the chunk
+        $this->_footerContent = $modx->getChunk($chunk);
+      }
+    }
+  } // setFooterContent
+
+  /**
+   * Sets the footer position from bottom.
+   * 
+   * @param int $value The footer position from bottom should be a minus number.
+   * @throws If the given value is not a number.
+   * @link http://www.tcpdf.org/examples/example_003.phps
+   */
+  private function setFooterPositionFromBottom($value)
+  {
+    if(is_numeric($value)) {
+      $this->_footerPositionFromBottom = $value;
+    } else {
+      throw new Exception('The footer position from bottom is not numeric.');
+    }
+  } // setFooterPositionFromBottom
 
   /**
    * Replaces placeholders in the given text and returns content.
@@ -505,29 +585,6 @@ class htmlToPDF extends TCPDF {
   } // setFooterPageSeparator
 
   /**
-   * Sets the position of the footer from the bottom of a page.
-   *
-   * @param int $value The position of the footer from the bottom of a page
-   *            in mm.
-   * @throws If value is not an integer.
-   */
-  public function setFooterPositionFromBottom($value)
-  {
-    if (is_int($value)) {
-      // The position has to be a negative number
-      if ($value < 0) {
-        $multiplier = 1;
-      } else {
-        $multiplier = -1;
-      }
-
-      $this->_footerPositionFromBottom = $value * ($multiplier);
-    } else {
-      throw new Exception('The position from bottom has to be an integer.');
-    }
-  } // setFooterPositionFromBottom
-
-  /**
    * Sets chunk defined content under the document content. The placeholders
    * in the chunk are replaced with the appropriate content.
    *
@@ -561,6 +618,7 @@ class htmlToPDF extends TCPDF {
   } // getContentFooter
 
   /**
+   * Override SetKeywords, should not be available outside this class.
    * Reads the keyword from a template variable.
    * 
    * @global object $modx
@@ -599,7 +657,6 @@ class htmlToPDF extends TCPDF {
     list($width, $height, $type, $attr) = getimagesize(
             MODX_BASE_PATH . self::TCPFD_IMAGE_FOLDER . $this->getImageFile());
 
-    //die('$width: ' .$width . ' image name: ' . $this->getImageFile());
     parent::SetHeaderData(
             $this->getImageFile(),
             //$width,
@@ -787,43 +844,47 @@ class htmlToPDF extends TCPDF {
   public function setContent($sourceIsChunk=false, $content='')
   {
     global $modx;
-
     $result = '';
     $modxHelper = modxHelper::getInstance();
 
     if ($sourceIsChunk) {
+      // Create the content with a chunk
+
       $chunk = $modx->getChunk($content);
 
       // Parse the content from the chunk with the MODx functions
-      $result = $modx->parseDocumentSource($content);
+      $result = $modx->parseDocumentSource($chunk);
 
         // Strip inline CSS
-        if($this->_stripCSSFromContent) {
-          $result = $modxHelper->removeInlineCSS($result);
-        }
-      } else {
-        // Check, whether the long title should be above the content
-        if ($this->_longTitleAboveContent) {
-          $result = '<h1>' . $modx->documentObject['longtitle'] . "</h1>\n";
-        }
+      if($this->_stripCSSFromContent) {
+        $result = $modxHelper->removeInlineCSS($result);
+      }
 
-        // Add the document content
-        $result .= $modx->documentObject['content'];
+      // The content footer is only available with standard parameters
+      $this->_contentFooter = '';
+    } else {
+      // Create the content with standard content and parameters
 
-        // Strip inline CSS
-        if($this->_stripCSSFromContent) {
-          $result = $modxHelper->removeInlineCSS($result);
-        }
+      // Check, whether the long title should be above the content
+      if ($this->_longTitleAboveContent) {
+        $result = '<h1>' . $modx->documentObject['longtitle'] . "</h1>\n";
+      }
 
-        // Parse the URLs and replace them to work from a PDF document,
-        // add CSS style above the content
-        // and add the content footer beneath the content
-        $result = $this->getCSS()
-                . $modxHelper->rewriteUrls($result)
-                . $this->_chunkContentFooter;
+      // Add the document content and parse the content for chunks, etc.
+      $result .= $modx->parseDocumentSource($modx->documentObject['content']);
+
+      // Strip inline CSS
+      if($this->_stripCSSFromContent) {
+        $result = $modxHelper->removeInlineCSS($result);
+      }
     }
 
-
+    // Parse the URLs and replace them to work from a PDF document,
+    // add CSS style above the content
+    // and add the content footer beneath the content
+    $result = $this->getCSS()
+            . $modxHelper->rewriteUrls($result)
+            . $this->_contentFooter;
 
     // Set the content to the class variable
     $this->_content = $result;
@@ -842,13 +903,43 @@ class htmlToPDF extends TCPDF {
   } // getContent
 
   /**
+   * The Footer is overwritten with a user styled footer.
+   */
+  public function Footer() {
+    // Position at 15 mm from bottom
+    $this->SetY($this->_footerPositionFromBottom);
+    // Set font
+    $this->SetFont(
+            $this->_footerFontType,
+            $this->_footerFontItalic,
+            $this->_footerFontSize);
+    // Page number
+    $this->Cell(
+            0,
+            10,
+            sprintf(
+              $this->_footerContent,
+              $this->getAliasNumPage(),
+              $this->getAliasNbPages()),
+            0,
+            false,
+            'C',
+            0,
+            '',
+            0,
+            false,
+            'T',
+            'M');
+  } // Footer
+
+  /**
    * Overwrites the original writeHTML method to implement the calls to add a
    * new page, add the content, close with lastPage. Writes the PDF document to
    * the output folder and relocates the header to the PDF docoument.
    *
    * @global object $modx
    */
-  public function  writeHtml()
+  public function generatePDF()
   {
     global $modx;
 
@@ -876,5 +967,5 @@ class htmlToPDF extends TCPDF {
 
     // Relocate to the PDF document
     header("Location: /$documentName");
-  } // writeHTML
+  } // generaterPDF
 } // htmlToPDF
