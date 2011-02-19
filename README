@@ -26,6 +26,13 @@ the assets/snippets/htmlToPDF/chunks/ directory.
 Here is an example for a call to htmlToPDF:
 [!htmlToPDF? &author=`Stefanie Janine Stoelting` &tvKeywords=`documentTags` &headerLogo=`logo.png` &chunkContentFooter=`pdf-contentfooter` &chunkStandardHeader=`pdf-header-text` &chunkStyle=`pdf-style`!]
 
+The snippet default properties are only needed, if you want to set TCPDF,
+htmlToPDF, or the document output to other paths, as defined by default.
+If you need to change this information, go the "Properties" tab on the
+htmlToPDF snippet and add the following parameters to the field
+"Default Properties" and afterwards insert your paths:
+&basePath=The base path for TCPDF and htmlToPDF;string; &htmlToPdfPath=The path to the classes of htmlToPDF;string; &tcpdfPath=The path to TCPDF;string; &outputPdfPath=The path, where the PDF documents are stored. You need to give read, delete, and create rights to that folder (777).;string;
+
 The following paramaters are available:
 
 ---------------------------------------------------------------------------------------------------------------------
@@ -109,4 +116,19 @@ The following paramaters are available:
 | imageScaleRatio            | The scale ratio for images.                    | number            | 1.25            |
 |----------------------------|------------------------------------------------|-------------------|-----------------|
 | footerChunk                | The footer chunk name.                         | Chunk             | Page %1s / %2s  |
+|----------------------------|------------------------------------------------|-------------------|-----------------|
+| basePath                   | The base path for TCPDF and htmlToPDF.         | string            | MODX_BASE_PATH  |
+|----------------------------|------------------------------------------------|-------------------|-----------------|
+| htmlToPdfPath              | The path to the classes of htmlToPDF.          | string            | assets/snippets/|
+|                            |                                                |                   | htmlToPDF/      |
+|----------------------------|------------------------------------------------|-------------------|-----------------|
+| tcpdfPath                  | The path to TCPDF.                             | string            | assets/lib/     |
+|                            |                                                |                   | tcpdf/          |
+|----------------------------|------------------------------------------------|-------------------|-----------------|
+| outputPdfPath              | The path, where the PDF documents are stored.  | string            | assets/pdf/     |
+|                            | You need to give read, delete, and create      |                   |                 |
+|                            | rights to that folder (777).                   |                   |                 |
+|----------------------------|------------------------------------------------|-------------------|-----------------|
+| headerImageHeight          | Sets the height for a logo in the header of    | int               | 20              |
+|                            | the PDF document in mm.                        |                   |                 |
 ---------------------------------------------------------------------------------------------------------------------

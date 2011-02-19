@@ -11,8 +11,8 @@
  * @link http://www.tcpdf.org/
  * @package htmlToPDF
  * @license LGPL
- * @since 2011/02/18
- * @version 0.1.beta1
+ * @since 2011/02/19
+ * @version 0.1.beta2
  * @example [!htmlToPDF? &author=`Stefanie Janine Stoelting` &tvKeywords=`documentTags` &headerLogo=`logo.png` &chunkContentFooter=`pdf-contentfooter` &chunkStandardHeader=`pdf-header-text` &chunkStyle=`pdf-style`!]
  */
 
@@ -22,11 +22,30 @@ try {
   $isPDF = isset($_GET['isPDF']) ? $_GET['isPDF'] == 'true' : false;
 
   if ($isPDF) {
+    define(PATH_TO_SNIPPET, 'assets/snippets/htmlToPDF/');
+    define(PATH_TO_TCPDF, 'assets/lib/tcpdf/');
+    define(PATH_TO_PDF_OUTPUT, 'assets/pdf/');
+
+    // Check, whether to use MODX_BASE_PATH or to use a defined real path
+    $basePath = isset($basePath) && !empty($basePath) ? $basePath : MODX_BASE_PATH;
+    if (realpath($basePath) === false)  $basePath = MODX_BASE_PATH;
+
+    // Get the path informations, if a path is not found, the default path
+    // is used
+    $htmlToPdfPath = isset($htmlToPdfPath) ? $htmlToPdfPath : PATH_TO_SNIPPET;
+    if (realpath($basePath . $htmlToPdfPath) === FALSE) $htmlToPdfPath = PATH_TO_SNIPPET;
+
+    $tcpdfPath = isset($tcpdfPath) ? $tcpdfPath : PATH_TO_TCPDF;
+    if (realpath($basePath . $tcpdfPath) === FALSE) $tcpdfPath = PATH_TO_TCPDF;
+
+    $outputPdfPath = isset($outputPdfPath) ? $outputPdfPath : PATH_TO_PDF_OUTPUT;
+    if (realpath($basePath . $outputPdfPath) === FALSE) $outputPdfPath = PATH_TO_PDF_OUTPUT;
+
     // Include the rquired files
-    require_once(MODX_BASE_PATH . 'assets/lib/tcpdf/config/lang/eng.php');
-    require_once(MODX_BASE_PATH . 'assets/lib/tcpdf/tcpdf.php');
-    require_once(MODX_BASE_PATH . 'assets/snippets/htmlToPDF/class.htmlToPDF.php');
-    require_once(MODX_BASE_PATH . 'assets/snippets/htmlToPDF/class.modxHelper.php');
+    require_once($basePath . $tcpdfPath . 'config/lang/eng.php');
+    require_once($basePath . $tcpdfPath . 'tcpdf.php');
+    require_once($basePath . $htmlToPdfPath . 'class.htmlToPDF.php');
+    require_once($basePath . $htmlToPdfPath . 'class.modxHelper.php');
 
     // Get the footer properties before the creation of the PDF object, because
     // it is not possible to set them after the creation.
@@ -35,6 +54,7 @@ try {
     $footerFontSize = isset($footerFontSize) && is_numeric($footerFontSize) ? $footerFontSize : htmlToPDF::DEFAULT_FOOTER_FONT_SIZE;
     $footerChunk = isset($footerChunk) ? $footerChunk : '';
     $footerPositionFromBottom = isset($footerPositionFromBottom) && is_numeric($footerPositionFromBottom) ? $footerPositionFromBottom : htmlToPDF::DEFAULT_FOOTER_POSITION_FROM_BOTTOM;
+    $headerImageHeight = isset($headerImageHeight) && is_numeric($headerImageHeight) ? $headerImageHeight : 20;
 
     // Create new PDF document
 
@@ -43,7 +63,8 @@ try {
             $footerFontType,
             $footerFontItalic,
             $footerFontSize,
-            $footerPositionFromBottom);
+            $footerPositionFromBottom,
+            $headerImageHeight);
 
     // Create the MODx helper
     $modxHelper = modxHelper::getInstance();
@@ -59,7 +80,8 @@ try {
     $pdf->SetFooterMargin(isset($marginFooter) && is_numeric($marginFooter) ? $marginFooter : 10);
     $pdf->setHeaderFontType(isset($headerFontType) ? $headerFontType : htmlToPDF::DEFAULT_FONT_TYPE);
     $pdf->setHeaderFontSize(isset($headerFontSize) && is_numeric($headerFontSize) ? $headerFontSize : htmlToPDF::DEFAULT_HEADER_FONT_SIZE);
-    $pdf->setImageFile(isset($headerLogo) ? $headerLogo : '');
+    $pdf->setImageFile(isset($headerLogo) ? $basePath . $tcpdfPath : '', isset($headerLogo) ? $headerLogo : '');
+
     $pdf->setHeaderFontBold(isset($headerFontBold) ? $headerFontBold == 1 : true);
     $contentFontType = isset($contentFontType) ? $contentFontType : 'times';
     $contentFontSize = isset($contentFontSize) && is_numeric($contentFontSize) ? $contentFontSize : 10;
@@ -86,7 +108,7 @@ try {
             isset($chunkContent) ? $chunkContent : '');
 
     // Set the header data
-    $pdf->SetHeaderData();
+    $pdf->SetHeaderData($basePath . $tcpdfPath);
 
     // Set header and footer fonts
     $pdf->setHeaderFont(
@@ -112,7 +134,7 @@ try {
       $pdf->SetFont($contentFontType, '', $contentFontSize);
     }
 
-    $pdf->generatePDF();
+    $pdf->generatePDF($basePath, $outputPdfPath);
   }
 
 // Catch all exceptions and log them into the MODx event log

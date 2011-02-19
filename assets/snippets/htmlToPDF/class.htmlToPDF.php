@@ -10,8 +10,8 @@
  * @link http://www.tcpdf.org/
  * @package htmlToPDF
  * @license LGPL
- * @since 2011/02/18
- * @version 0.1.beta1
+ * @since 2011/02/19
+ * @version 0.1.beta2
  */
 class htmlToPDF extends TCPDF {
   /**
@@ -45,9 +45,14 @@ class htmlToPDF extends TCPDF {
   const DEFAULT_DATE_FORMAT = 'Y-m-d';
 
   /**
-   * Constant string The path to the TCPDF image folder
+   * Constant string The path to the TCPDF image folder.
    */
-  const TCPFD_IMAGE_FOLDER = '/assets/lib/tcpdf/images/';
+  const TCPFD_IMAGE_FOLDER = 'images/';
+
+  /**
+   * Constant int The default height for header images in mm, default is 20.
+   */
+  const DEFAULT_HEADER_IMAGE_HEIGHT = 20;
 
   /**
    * The path and name of the image file.
@@ -173,9 +178,31 @@ class htmlToPDF extends TCPDF {
    */
   private $_footerContent;
 
+  /**
+   * The height of the header image in mm, default is 20.
+   * @var int
+   */
+  private $_headerImageHeight;
 
+
+  /**
+   * Constructor, overwrites the TCPDF constructor to set some properties, that
+   * only can be set before the TCPDF constructor is called. In addition,
+   * several default values for properties are set.
+   *
+   * @param string $footerChunk The name of the footer chunk.
+   * @param string $footerFont The font for the footer.
+   * @param boolean $footerFontItalic Whether the footer font should be italic,
+   *                or not.
+   * @param int $footerFontSize The footer font size.
+   * @param int $footerPositionFromBottom The footer position from bottom in mm,
+   *            this value should be negative.
+   * @param int $headerImageHeight The height of the header image in mm, default
+   *            is 20.
+   */
   public function  __construct($footerChunk, $footerFont, $footerFontItalic,
-          $footerFontSize, $footerPositionFromBottom)
+          $footerFontSize, $footerPositionFromBottom,
+          $headerImageHeight=self::DEFAULT_HEADER_IMAGE_HEIGHT)
   {
     // Set default values with constants
     $this->_headerFontType = self::DEFAULT_FONT_TYPE;
@@ -193,6 +220,7 @@ class htmlToPDF extends TCPDF {
     $this->setFooterFontItalic($footerFontItalic);
     $this->setFooterPositionFromBottom($footerPositionFromBottom);
     $this->setFooterContent($footerChunk);
+    $this->setHeaderImageHeight($headerImageHeight);
 
     parent::__construct(
             PDF_PAGE_ORIENTATION,
@@ -242,6 +270,21 @@ class htmlToPDF extends TCPDF {
       throw new Exception('The footer position from bottom is not numeric.');
     }
   } // setFooterPositionFromBottom
+
+  /**
+   * Sets the height for header images in mm.
+   *
+   * @param int $value The height for header images in mm.
+   * @throws If the given value is not a number.
+   */
+  private function setHeaderImageHeight($value)
+  {
+    if(is_numeric($value)) {
+      $this->_headerImageHeight = $value;
+    } else {
+      throw new Exception('The footer position from bottom is not numeric.');
+    }
+  } // setHeaderImageHeight
 
   /**
    * Replaces placeholders in the given text and returns content.
@@ -330,6 +373,7 @@ class htmlToPDF extends TCPDF {
   /**
    * Sets the image file for the header.
    *
+   * @param string $realPathToTCPDF The real path to the TCPDF libary.
    * @param string $value The image file name with its full path, allowed file
    *               extensions are jpg, gif, or png.
    * @throws If the file does not exists.
@@ -337,11 +381,11 @@ class htmlToPDF extends TCPDF {
    * @throws If the file extesnions is not one of e the allowed file extensions
    *         are jpg, gif, or png.
    */
-  public function setImageFile($value)
+  public function setImageFile($realPathToTCPDF, $value)
   {
     global $modx;
 
-    $checkFile = MODX_BASE_PATH . self::TCPFD_IMAGE_FOLDER . $value;
+    $checkFile = $realPathToTCPDF . self::TCPFD_IMAGE_FOLDER . $value;
 
     if (file_exists($checkFile)) {
       $tmp = explode('.', $value);
@@ -649,18 +693,18 @@ class htmlToPDF extends TCPDF {
    * site header.
    *
    * @global object $modx
+   * @param string $realPathToTCPDF The real path to the TCPDF libary.
    */
-  public function SetHeaderData()
+  public function SetHeaderData($realPathToTCPDF)
   {
     global $modx;
 
     list($width, $height, $type, $attr) = getimagesize(
-            MODX_BASE_PATH . self::TCPFD_IMAGE_FOLDER . $this->getImageFile());
+            $realPathToTCPDF . self::TCPFD_IMAGE_FOLDER . $this->getImageFile());
 
     parent::SetHeaderData(
             $this->getImageFile(),
-            //$width,
-            20,
+            $this->_headerImageHeight,
             $modx->documentObject['pagetitle'],
             $this->getHeaderText()
             );
@@ -938,34 +982,43 @@ class htmlToPDF extends TCPDF {
    * the output folder and relocates the header to the PDF docoument.
    *
    * @global object $modx
+   * @param string $basePath The base path to the output path.
+   * @param string $outputPath The path, where the PDF files should be generated
+   *               to.
+   * @throws If the path for output does not exist ($basePath . $outPath).
    */
-  public function generatePDF()
+  public function generatePDF($basePath, $outputPath)
   {
     global $modx;
 
-    // Add a page
-    parent::AddPage();
+    if (realpath($outputPath) === false) {
+      throw new Exception("The output path \"$basePath$outputPath\" does not exist.");
+    } else {
 
-    // Output the content
-    parent::writeHTML($this->getContent(), true, false, true, false, '');
+      // Add a page
+      parent::AddPage();
 
-    // Reset pointer to the last page
-    parent::lastPage();
+      // Output the content
+      parent::writeHTML($this->getContent(), true, false, true, false, '');
 
-    // Close and output PDF document
-    $documentName = 'assets/pdf/' .$modx->documentObject['alias'] . '.pdf';
+      // Reset pointer to the last page
+      parent::lastPage();
 
-    if (!file_exists($modx->config['base_path'] . $documentName)) {
-      parent::Output($modx->config['base_path'] . $documentName, 'F');
-    } elseif ($this->_rewritePDF) {
-      if (unlink($modx->config['base_path'] . $documentName)) {
-        parent::Output($modx->config['base_path'] . $documentName, 'F');
-      } else {
-        $modx->logEvent(0, 2, sprintf('The file %1$s could not be deleted, please check the rights on the PDF output folder.', $documentName), 'htmlToPDF snippet');
+      // Close and output PDF document
+      $documentName = $outputPath .$modx->documentObject['alias'] . '.pdf';
+
+      if (!file_exists($basePath . $documentName)) {
+        parent::Output($basePath . $documentName, 'F');
+      } elseif ($this->_rewritePDF) {
+        if (unlink($basePath . $documentName)) {
+          parent::Output($basePath . $documentName, 'F');
+        } else {
+          $modx->logEvent(0, 2, sprintf('The file %1$s could not be deleted, please check the rights on the PDF output folder.', $documentName), 'htmlToPDF snippet');
+        }
       }
-    }
 
-    // Relocate to the PDF document
-    header("Location: /$documentName");
+      // Relocate to the PDF document
+      header("Location: /$documentName");
+    }
   } // generaterPDF
 } // htmlToPDF

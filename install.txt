@@ -4,6 +4,9 @@ The TCPDF files are part of this package.
 
 Upload all files inside the assets folder to your web-space. The lib folder
 already contains a htacces file, that disallows every call from the web.
+If you don't want to use the default path used for TCPDF and htmlToPDF, that is
+not a problem, but you need to configure the snippet with the path informations,
+or give the path informations with the snippet call.
 
 If you want a logo in the page header, you have to upload the logo the folder
 assets/lib/tcpdf/images/. This is because TCPDF only uses this folder, to
@@ -12,6 +15,10 @@ look images files.
 Create two new snippets:
 htmlToPDF       -> assets/snippets/htmlToPDF/snippet.htmlToPDF.php.tpl
 getCurrentDocID -> assets/snippets/htmlToPDF/snippet.getCurrentDocID.php.tpl
+
+Create the PDF output path and give the rights, to create and delete files
+there (777). The default is assets/pdf/, but you may configure it to fit your
+needs.
 
 No create the chunks, that you want to use in your snippet calls. You may create
 different chunks for different websites, if you use htmlToPDF in different

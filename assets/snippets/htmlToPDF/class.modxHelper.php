@@ -11,7 +11,7 @@
  * @package htmlToPDF
  * @license LGPL
  * @since 2011/02/18
- * @version 0.1.beta1
+ * @version 0.1.beta2
  */
 final class modxHelper {
   /**
