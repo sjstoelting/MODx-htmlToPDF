@@ -60,7 +60,7 @@ htmlToPDF snippet and add the following parameters to the field
 ###Parameters###
 The following parameters are available:
 <table border="1" cellpadding="6">
-<tr><td>Name</td><td>Description</td><td>Possible Values</td><td>Default</td></tr>
+<tr><th>Name</th><th>Description</th><th>Possible Values</th><th>Default</th></tr>
 
 <tr><td>isPDF</td><td>Is added to the document URI, to identify PDF calls.</td><td>true</td><td></td></tr>
 
