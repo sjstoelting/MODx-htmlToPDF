@@ -1,0 +1,137 @@
+MODx-htmlToPDF
+==============
+
+Stefanie Janine Stoelting
+-------------------------
+
+This package contains source for an HTML to PDF converter for MODx Evolution, which is available at
+the [MODx Website](http://modx.com/evolution/download/)
+
+Currently it is not planned to create a copy for MODx Revolution.
+
+The source is licensed under the GNU Lesser General Public License, version 2.1
+as published at [http://www.gnu.org/licenses/lgpl-2.1.html](http://www.gnu.org/licenses/lgpl-2.1.html)
+
+This MODx snippet uses TCPDF, available at [http://www.tcpdf.org/](http://www.tcpdf.org/), to create the
+PDF Files from the content of a web document, published with MODx. TCPDF is
+part of the package.
+
+The main goal is to create highly configurable PDF documents. This is possible
+with parameters that one can use in the snippet tag and through the usage of chunks.
+All chunks make use of the placeholders as defined in other MODx snippets.
+
+###Installation###
+
+For the installation you need to upload the TCPDF in the directory:  
+
+    assets/lib/tcpdf/  
+
+The snippet classes should be located at:  
+
+    assets/snippets/htmlToPDF/  
+
+Create a new snippet with the source of snippet.hmtlToPDF.php and call the
+snippet within your templates, probably at the top of the template.
+For the snippet call you can add several chunks as templates. Examples are in
+the assets/snippets/htmlToPDF/chunks/ directory.
+
+###Example Snippet Call###
+
+Here is an example for a call to htmlToPDF:
+
+     [!htmlToPDF?  
+        &author=``Stefanie Janine Stoelting``  
+        &tvKeywords=``documentTags``  
+        &headerLogo=``logo.png``  
+        &chunkContentFooter=``pdf-contentfooter``  
+        &chunkStandardHeader=``pdf-header-text``  
+        &chunkStyle=``pdf-style``  
+     !]  
+
+###Default Properties###
+
+The snippet default properties are only needed, if you want to set TCPDF,
+htmlToPDF, or the document output to other paths, as defined by default.
+If you need to change this information, go the "Properties" tab on the
+htmlToPDF snippet and add the following parameters to the field
+"Default Properties" and afterwards insert your paths:
+&basePath=The base path for TCPDF and htmlToPDF;string; &htmlToPdfPath=The path to the classes of htmlToPDF;string; &tcpdfPath=The path to TCPDF;string; &outputPdfPath=The path, where the PDF documents are stored. You need to give read, delete, and create rights to that folder (777).;string;
+
+###Parameters###
+The following parameters are available:
+<table border="1" cellpadding="6">
+<tr><td>Name</td><td>Description</td><td>Possible Values</td><td>Default</td></tr>
+
+<tr><td>isPDF</td><td>Is added to the document URI, to identify PDF calls.</td><td>true</td><td></td></tr>
+
+<tr><td>languageCode</td><td>The PDF document language code.</td><td>EN, DE,...</td><td>EN</td></tr>
+
+<tr><td>setDateFormat</td><td>The date format string for all dates.</td><td>Y-m-d, d.m.Y</td><td>Y-m-d</td></tr>
+
+<tr><td>marginLeft</td><td>The left margin of the document.</td><td>number in mm</td><td>10</td></tr>
+
+<tr><td>marginRight</td><td>The right margin of the document.</td><td>number in mm</td><td>10</td></tr>
+
+<tr><td>marginTop</td><td>The top margin of the document.</td><td>number in mm</td><td>30</td></tr>
+
+<tr><td>marginBottom</td><td>The top margin of the document.</td><td>number in mm</td><td>25</td></tr>
+
+<tr><td>marginHeader</td><td>The header margin of the document.</td><td>number in mm</td><td>5</td></tr>
+
+<tr><td>marginFooter</td><td>The footer margin of the document.</td><td>number in mm</td><td>10</td></tr>
+
+<tr><td>headerFontType</td><td>The header font type for standard headers.</td><td>Font</td><td>helvetica</td></tr>
+
+<tr><td>headerFontSize</td><td>The font size for standard headers.</td><td>number</td><td>16</td></tr>
+
+<tr><td>headerFontBold</td><td>Whether the header font is bold, or not.</td><td>Number 0 or 1</td><td>1</td></tr>
+
+<tr><td>headerLogo</td><td>The logo for standard headers, the logo has to be in the<br /> folder assets/lib/tcpdf/images/ to be found byTCPDF.</td><td>GIF, JPG, PNG</td><td></td></tr>
+
+<tr><td>footerPositionFromBottom</td><td>The footer position from the bottom.</td><td>number in mm</td><td>15</td></tr>
+
+<tr><td>footerFontType</td><td>The footer font type for standard footers.</td><td>Font</td><td>helvetica</td></tr>
+
+<tr><td>footerFontItalic</td><td>Whether the header font is italic, or not<br /> for standard footers.</td><td>Number 0 or 1</td><td>1</td></tr>
+
+<tr><td>footerFontSize</td><td>The font size for standard footers.</td><td>number</td><td>8</td></tr>
+
+<tr><td>contentFontType</td><td>The content font type for standard content.</td><td>Font</td><td>times</td></tr>
+
+<tr><td>contentFontSize</td><td>The font size for standard content.</td><td>number</td><td>10</td></tr>
+
+<tr><td>longTitleAboveContent</td><td>Whether the documents long title should be in the <br />document above the content, or not, only<br /> for standard content.</td><td>Number 0 or 1</td><td>1</td></tr>
+
+<tr><td>stripCSSFromContent</td><td>Strip in-line CSS, or not, only for standard content.</td><td>Number 0 or 1</td><td>1</td></tr>
+
+<tr><td>rewritePDF</td><td>If a PDF document exists, the document is not rewritten <br />every time, when the PDF document is requested. This <br />is a cache function for PDF documents.</td><td>Number 0 or 1</td><td>1</td></tr>
+
+<tr><td>author</td><td>Author for PDF document properties.</td><td>string</td><td></td></tr>
+
+<tr><td>tvKeywords</td><td>A template variable for keywords for the PDF document properties. <br />Keywords are comma separated, you may reuse <br />keywords for tag clouds.</td><td>Template Variable</td><td></td></tr>
+
+<tr><td>chunkHeader</td><td>Chunk for customized headers</td><td>Chunk</td><td></td></tr>
+
+<tr><td>chunkContentFooter</td><td>Chunk for customized text placed under the content. For example <br /> for a link to the current document on the website inside the PDF <br /> document. Only used with standard content.</td><td>Chunk</td><td></td></tr>
+
+<tr><td>chunkStyle</td><td>A chunk for CSS styles in the PDF document.</td><td>Chunk</td><td></td></tr>
+
+<tr><td>chunkContent</td><td>A chunk for individual arrangement of the <br />content in the document.</td><td>Chunk</td><td></td></tr>
+
+<tr><td>fontMonoSpaced</td><td>The Monospaced font.</td><td>Font</td><td>courier</td></tr>
+
+<tr><td>imageScaleRatio</td><td>The scale ratio for images.</td><td>number</td><td>1.25</td></tr>
+
+<tr><td>footerChunk</td><td>The footer chunk name.</td><td>Chunk</td><td>Page %1s / %2s</td></tr>
+
+<tr><td>basePath</td><td>The base path for TCPDF and htmlToPDF.</td><td>string</td><td>MODX_BASE_PATH</td></tr>
+
+<tr><td>htmlToPdfPath</td><td>The path to the classes of htmlToPDF.</td><td>string</td><td>assets/snippets/htmlToPDF/|</td></tr>
+
+<tr><td>tcpdfPath</td><td>The path to TCPDF.</td><td>string</td><td>assets/lib/tcpdf/</td></tr>
+
+<tr><td>outputPdfPath</td><td>The path, where the PDF documents are stored. You <br />need to give read, delete, and create rights to that folder (777).</td><td>string</td><td>assets/pdf/</td></tr>
+
+<tr><td>headerImageHeight</td><td>Sets the height for a logo in the header of the PDF document in mm.</td><td>int</td><td>20</td></tr>
+
+</table>
