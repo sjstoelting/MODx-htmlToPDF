@@ -9,12 +9,17 @@ the [MODx Website](http://modx.com/evolution/download/)
 
 Currently it is not planned to create a copy for MODx Revolution.
 
+###License###
+
 The source is licensed under the GNU Lesser General Public License, version 2.1
 as published at [http://www.gnu.org/licenses/lgpl-2.1.html](http://www.gnu.org/licenses/lgpl-2.1.html)
 
-This MODx snippet uses TCPDF, available at [http://www.tcpdf.org/](http://www.tcpdf.org/), to create the
+###Usage of TCPDF###
+
+This MODx snippets uses TCPDF, available at [http://www.tcpdf.org/](http://www.tcpdf.org/), to create the
 PDF Files from the content of a web document, published with MODx. TCPDF is
-part of the package.
+part of the package. TCPDF itself is licensed under LGPL V3, as described at
+[http://www.tcpdf.org/license.php](http://www.tcpdf.org/license.php).
 
 The main goal is to create highly configurable PDF documents. This is possible
 with parameters that one can use in the snippet tag and through the usage of chunks.
