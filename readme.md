@@ -1,13 +1,13 @@
 MODx-htmlToPDF
 ==============
 
-Stefanie Janine Stoelting
--------------------------
-
 This package contains source for an HTML to PDF converter for MODx Evolution, which is available at
 the [MODx Website](http://modx.com/evolution/download/)
 
 Currently it is not planned to create a copy for MODx Revolution.
+
+If you use Microsoft Windows in any version, please notice, that all files of
+this project have UNIX based line breaks.
 
 ###License###
 

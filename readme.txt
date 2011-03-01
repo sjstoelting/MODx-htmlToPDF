@@ -1,6 +1,9 @@
 The package contains source for the CMS MODx Evolution, available at
 http://modxcms.com/
 
+If you use Microsoft Windows in any version, please notice, that all files of
+this project have UNIX based line breaks.
+
 The source is licensed under the GNU Lesser General Public License, version 2.1
 as published on http://www.gnu.org/licenses/lgpl-2.1.html, the license is also
 available in the license.txt file within this package.
