@@ -11,7 +11,7 @@
  * @package htmlToPDF
  * @license LGPL
  * @since 2011/02/19
- * @version 0.1.beta2
+ * @version 0.1
  */
 class htmlToPDF extends TCPDF {
   /**

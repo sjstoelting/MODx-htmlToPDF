@@ -1,7 +1,7 @@
 <?php
 /**
  * Snippet Name: getCurrentDocID
- * Description: <strong>0.1.beta1</strong> Get the current document ID
+ * Description: <strong>0.1</strong> Get the current document ID
  *
  * @name getCurrentDocID
  *
@@ -12,7 +12,7 @@
  * @package htmlToPDF
  * @license LGPL
  * @since 2011/02/18
- * @version 0.1.beta2
+ * @version 0.1
  */
 
 return $modx->documentObject['id'];

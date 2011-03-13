@@ -10,8 +10,8 @@
  * @link http://www.tcpdf.org/
  * @package htmlToPDF
  * @license LGPL
- * @since 2011/02/18
- * @version 0.1.beta2
+ * @since 2011/03/19
+ * @version 0.1
  */
 final class modxHelper {
   /**
@@ -95,7 +95,7 @@ final class modxHelper {
    * @param int $docID The document identifier
    * @return string The content of of the template variable for the document identifier
    */
-  function getTVContent($tvName, $docID) {
+  public function getTVContent($tvName, $docID) {
     global $modx;
 
     $result = '';
