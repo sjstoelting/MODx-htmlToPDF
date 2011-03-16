@@ -16,7 +16,7 @@ as published at [http://www.gnu.org/licenses/lgpl-2.1.html](http://www.gnu.org/l
 
 ###Usage of TCPDF###
 
-This MODx snippets uses TCPDF, available at [http://www.tcpdf.org/](http://www.tcpdf.org/), to create the
+This MODx snippet uses TCPDF, available at [http://www.tcpdf.org/](http://www.tcpdf.org/), to create the
 PDF Files from the content of a web document, published with MODx. TCPDF is
 part of the package. TCPDF itself is licensed under LGPL V3, as described at
 [http://www.tcpdf.org/license.php](http://www.tcpdf.org/license.php).
