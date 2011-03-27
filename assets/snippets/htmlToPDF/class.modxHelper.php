@@ -52,7 +52,7 @@ final class modxHelper {
 
   /**
    * Returns the content with the links placed in the content with [~id~].
-   * The original code is part of document.parser.class.inc of MODx Evolution.
+   * The original code is part of document.parser.class.inc of MODX Evolution.
    * The extension to the original code is to set the site URL as a prefix to
    * use the links outsite of the current domain, for example in PDF files.
    *

@@ -1,4 +1,4 @@
-The package contains source for the CMS MODx Evolution, available at
+The package contains source for the CMS MODX Evolution, available at
 http://modxcms.com/
 
 If you use Microsoft Windows in any version, please notice, that all files of
@@ -8,14 +8,14 @@ The source is licensed under the GNU Lesser General Public License, version 2.1
 as published on http://www.gnu.org/licenses/lgpl-2.1.html, the license is also
 available in the license.txt file within this package.
 
-This MODx snippet uses TCPDF, available at http://www.tcpdf.org/, to create the
-PDF Files from the content of a web document, published with MODx. TCPDF is
+This MODX snippet uses TCPDF, available at http://www.tcpdf.org/, to create the
+PDF Files from the content of a web document, published with MODX. TCPDF is
 part of the package. TCPDF itself is licensed under LGPL V3, as described at
 http://www.tcpdf.org/license.php.
 
 The main goal is to create highly configurable PDF documents. This is possible
 with a lot of parameters, that one can use on a call and the usage of chunks.
-All chunks make use of the placeholders as defined in other MODx snippets.
+All chunks make use of the placeholders as defined in other MODX snippets.
 
 For the installation you need to upload the TCPDF in the directoy:
 assets/lib/tcpdf/

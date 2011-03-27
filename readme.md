@@ -1,10 +1,10 @@
-MODx-htmlToPDF
+MODX-htmlToPDF
 ==============
 
-This package contains source for an HTML to PDF converter for MODx Evolution, which is available at
-the [MODx Website](http://modx.com/evolution/download/)
+This package contains source for an HTML to PDF converter for MODX Evolution, which is available at
+the [MODX Website](http://modx.com/evolution/download/)
 
-Currently it is not planned to create a copy for MODx Revolution.
+Currently it is not planned to create a copy for MODX Revolution.
 
 If you use Microsoft Windows in any version, please notice, that all files of
 this project have UNIX based line breaks.
@@ -16,15 +16,15 @@ as published at [http://www.gnu.org/licenses/lgpl-2.1.html](http://www.gnu.org/l
 
 ###Usage of TCPDF###
 
-This MODx snippet uses TCPDF, available at [http://www.tcpdf.org/](http://www.tcpdf.org/), to create the
-PDF Files from the content of a web document, published with MODx. TCPDF is
+This MODX snippet uses TCPDF, available at [http://www.tcpdf.org/](http://www.tcpdf.org/), to create the
+PDF Files from the content of a web document, published with MODX. TCPDF is
 part of the package. TCPDF itself is licensed under LGPL V3, as described at
 [http://www.tcpdf.org/license.php](http://www.tcpdf.org/license.php).
 The current version of TCPDF used in this package is 5.9.060.
 
 The main goal is to create highly configurable PDF documents. This is possible
 with parameters that one can use in the snippet tag and through the usage of chunks.
-All chunks make use of the placeholders as defined in other MODx snippets.
+All chunks make use of the placeholders as defined in other MODX snippets.
 
 ###Installation###
 

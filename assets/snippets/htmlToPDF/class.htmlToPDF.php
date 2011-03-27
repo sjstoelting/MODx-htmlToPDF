@@ -871,9 +871,9 @@ class htmlToPDF extends TCPDF {
 
   /**
    * When $sourceIsChunk is true, the variable $content should contain the name
-   * of a chunk. The chunk should contain a template in HTML style with MODx
-   * placeholders, snippets, and chunks. This works the same way, as a MODx
-   * Document, because it makes use of the MODx function to parse a document.
+   * of a chunk. The chunk should contain a template in HTML style with MODX
+   * placeholders, snippets, and chunks. This works the same way, as a MODX
+   * Document, because it makes use of the MODX function to parse a document.
    * Otherwise the content of the current document is used for the PDF content.
    * Links are translated into links with the complete URI, because they would
    * not work otherwise.
@@ -896,7 +896,7 @@ class htmlToPDF extends TCPDF {
 
       $chunk = $modx->getChunk($content);
 
-      // Parse the content from the chunk with the MODx functions
+      // Parse the content from the chunk with the MODX functions
       $result = $modx->parseDocumentSource($chunk);
 
         // Strip inline CSS

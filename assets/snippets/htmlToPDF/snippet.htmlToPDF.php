@@ -66,7 +66,7 @@ try {
             $footerPositionFromBottom,
             $headerImageHeight);
 
-    // Create the MODx helper
+    // Create the MODX helper
     $modxHelper = modxHelper::getInstance();
 
     // Set document information
@@ -137,7 +137,7 @@ try {
     $pdf->generatePDF($basePath, $outputPdfPath);
   }
 
-// Catch all exceptions and log them into the MODx event log
+// Catch all exceptions and log them into the MODX event log
 } catch (Exception $e) {
 
   $modx->logEvent(0, 2, sprintf('An error occured in line %1$d: %2$s', $e->getLine(), $e->getMessage()), 'htmlToPDF snippet');
