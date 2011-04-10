@@ -10,8 +10,8 @@
  * @link http://www.tcpdf.org/
  * @package htmlToPDF
  * @license LGPL
- * @since 2011/02/19
- * @version 0.1
+ * @since 2011/04/10
+ * @version 0.1.1
  */
 class htmlToPDF extends TCPDF {
   /**
@@ -985,9 +985,10 @@ class htmlToPDF extends TCPDF {
    * @param string $basePath The base path to the output path.
    * @param string $outputPath The path, where the PDF files should be generated
    *               to.
+   * @param string The base URL where MODX is available
    * @throws If the path for output does not exist ($basePath . $outPath).
    */
-  public function generatePDF($basePath, $outputPath)
+  public function generatePDF($basePath, $outputPath, $baseURL)
   {
     global $modx;
 
@@ -1018,7 +1019,7 @@ class htmlToPDF extends TCPDF {
       }
 
       // Relocate to the PDF document
-      header("Location: /$documentName");
+      header('Location: ' . $baseURL . $documentName);
     }
   } // generaterPDF
 } // htmlToPDF

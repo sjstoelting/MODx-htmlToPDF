@@ -11,8 +11,8 @@
  * @link http://www.tcpdf.org/
  * @package htmlToPDF
  * @license LGPL
- * @since 2011/02/19
- * @version 0.1
+ * @since 2011/04/10
+ * @version 0.1.1
  * @example [!htmlToPDF? &author=`Stefanie Janine Stoelting` &tvKeywords=`documentTags` &headerLogo=`logo.png` &chunkContentFooter=`pdf-contentfooter` &chunkStandardHeader=`pdf-header-text` &chunkStyle=`pdf-style`!]
  */
 
@@ -134,7 +134,7 @@ try {
       $pdf->SetFont($contentFontType, '', $contentFontSize);
     }
 
-    $pdf->generatePDF($basePath, $outputPdfPath);
+    $pdf->generatePDF($basePath, $outputPdfPath, MODX_BASE_URL);
   }
 
 // Catch all exceptions and log them into the MODX event log
