@@ -33,10 +33,7 @@ Here is an example for a call to htmlToPDF:
 
 How to call the snippet
 
-The snippet should not be called inside the document content, because this ends up
-in an endless loop.
-
-Instead place the snippet in the template of the document, where you want your
+Place the snippet in the template of the document, where you want your
 readers to download the content as PDF.
 The advantage is, that you only have one call for all your documents.
 

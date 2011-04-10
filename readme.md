@@ -20,7 +20,7 @@ This MODX snippet uses TCPDF, available at [http://www.tcpdf.org/](http://www.tc
 PDF Files from the content of a web document, published with MODX. TCPDF is
 part of the package. TCPDF itself is licensed under LGPL V3, as described at
 [http://www.tcpdf.org/license.php](http://www.tcpdf.org/license.php).
-The current version of TCPDF used in this package is 5.9.060.
+The current version of TCPDF used in this package is 5.9.067.
 
 The main goal is to create highly configurable PDF documents. This is possible
 with parameters that one can use in the snippet tag and through the usage of chunks.
@@ -56,11 +56,8 @@ Here is an example for a call to htmlToPDF:
 
 ###How to call the snippet###
 
-The snippet should not be called inside the document content, because this ends up
-in an endless loop.
-
-Instead place the snippet in the template of the document, where you want your
-readers to download the content as PDF.
+Place the snippet in the template of the document, where you want your readers 
+to download the content as PDF.
 The advantage is, that you only have one call for all your documents.
 
 If you have documents where that you do not want to publish as PDF and you only 
