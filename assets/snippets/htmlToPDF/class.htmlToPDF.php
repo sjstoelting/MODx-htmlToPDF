@@ -914,8 +914,15 @@ class htmlToPDF extends TCPDF {
         $result = '<h1>' . $modx->documentObject['longtitle'] . "</h1>\n";
       }
 
+      // Check for calls to htmlToPDF in the content and remove the calls
+      $documentContent = $modx->documentObject['content'];
+      $start = strpos($documentContent, '[!htmlToPDF?');
+      $end = strpos($documentContent, '!]', $start);
+
+      $documentContent = str_replace(substr($documentContent, $start, $end - $start + 2), '', $documentContent);
+      
       // Add the document content and parse the content for chunks, etc.
-      $result .= $modx->parseDocumentSource($modx->documentObject['content']);
+      $result .= $modx->parseDocumentSource($documentContent);
 
       // Strip inline CSS
       if($this->_stripCSSFromContent) {
