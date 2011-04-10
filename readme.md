@@ -54,6 +54,26 @@ Here is an example for a call to htmlToPDF:
         &chunkStyle=``pdf-style``  
      !]  
 
+###How to call the snippet###
+
+The snippet should not be called inside the document content, because this ends up
+in an endless loop.
+
+Instead place the snippet in the template of the document, where you want your
+readers to download the content as PDF.
+The advantage is, that you only have one call for all your documents.
+
+If you have documents where that you do not want to publish as PDF and you only 
+want to use one template, than try it with a template variable (TV) for this and 
+PHX for the call and put your call to htmlToPDF into a snippet:
+
+     [+phx:if=`[*printPDF*]`:is=`1`:then=`{{snippetCAllhtmlToPDF}}`:else=``+]
+
+Where printPDF ist a possible name for the TV and snippetCAllhtmlToPDF is the 
+name of the snippet.
+
+PHX is available at http://modx.com/extras/package/phx
+
 ###Default Properties###
 
 The snippet default properties are only needed, if you want to set TCPDF,
