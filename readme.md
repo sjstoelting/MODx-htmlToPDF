@@ -71,6 +71,13 @@ name of the snippet.
 
 PHX is available at http://modx.com/extras/package/phx
 
+###Link Generation###
+There is a chunk named pdf-link.txt that includes an example how to create a 
+link to the current document. The example looks like the following:
+
+    <a href="[* id *]?isPDF=true"Download">Download as PDF</a>
+
+
 ###Default Properties###
 
 The snippet default properties are only needed, if you want to set TCPDF,
