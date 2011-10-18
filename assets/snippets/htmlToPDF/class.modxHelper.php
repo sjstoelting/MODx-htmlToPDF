@@ -10,8 +10,8 @@
  * @link http://www.tcpdf.org/
  * @package htmlToPDF
  * @license LGPL
- * @since 2011/03/19
- * @version 0.1
+ * @since 2011/10/18
+ * @version 0.1.2
  */
 final class modxHelper {
   /**
