@@ -75,7 +75,7 @@ PHX is available at http://modx.com/extras/package/phx
 There is a chunk named pdf-link.txt that includes an example how to create a 
 link to the current document. The example looks like the following:
 
-    <a href="[* id *]?isPDF=true"Download">Download as PDF</a>
+    <a href="[*id*]?isPDF=true"Download">Download as PDF</a>
 
 
 ###Default Properties###
