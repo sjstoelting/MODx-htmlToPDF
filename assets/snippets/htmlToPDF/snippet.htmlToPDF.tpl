@@ -1,7 +1,7 @@
 <?php
 /**
  * Snippet Name: htmlToPDF
- * Description: <strong>0.1.1</strong> Returns the current document as PDF
+ * Description: <strong>0.1.2</strong> Returns the current document as PDF
  *
  * @name htmlToPDF
  *
