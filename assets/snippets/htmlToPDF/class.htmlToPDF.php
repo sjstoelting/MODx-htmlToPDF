@@ -10,7 +10,7 @@
  * @link http://www.tcpdf.org/
  * @package htmlToPDF
  * @license LGPL
- * @since 2011/10/18
+ * @since 2011/10/20
  * @version 0.1.2
  */
 class htmlToPDF extends TCPDF {
@@ -398,13 +398,13 @@ class htmlToPDF extends TCPDF {
           $this->_imageFile = $value;
           $this->_imageFileType = $fileType;
         } else {
-          throw new Exception('The file extension is not jpg, gif, or png');
+          throw new Exception(sprintf('The file extension "%s" is not jpg, gif, or png', $fileType));
         }
       } else {
         throw new Exception('The image file name has no extension.');
       }
     } else {
-      throw new Exception('The given file name does not exist.');
+      throw new Exception(sprintf('The given file "%s" name does not exist.', $checkFile));
     }
   } // setImageFile
 
