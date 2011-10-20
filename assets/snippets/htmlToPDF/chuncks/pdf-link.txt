@@ -1,7 +1,7 @@
 <p>
   <!-- Use the following link creation for numbererd link -->
-  <a href="[*id*]?isPDF=true"Download">Download as PDF</a>
+  <a href="[*id*]?isPDF=true">Download as PDF</a>
 
   <!-- Use the following link to create a SEO link -->
-  <a href="[~[!getCurrentDocID!]~]?isPDF=true"Download">Download as PDF</a>
+  <a href="[~[!getCurrentDocID!]~]?isPDF=true">Download as PDF</a>
 </p>
