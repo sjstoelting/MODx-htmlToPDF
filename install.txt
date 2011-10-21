@@ -1,4 +1,5 @@
 Installation instructions for htmlToPDF
+(Current Version: 0.1.2)
 
 The TCPDF files are part of this package.
 
@@ -16,11 +17,17 @@ Create two new snippets:
 htmlToPDF       -> assets/snippets/htmlToPDF/snippet.htmlToPDF.php.tpl
 getCurrentDocID -> assets/snippets/htmlToPDF/snippet.getCurrentDocID.php.tpl
 
+Create on new plugin
+htmlToPDF       -> assets/plugins/htmlToPDF/plugin.htmlToPDF.tpl
+On the page "System Events" choose these two options in the area "Documents":
+- OnBeforeDocFormDelete
+- OnDocFormSave
+
 Create the PDF output path and give the rights, to create and delete files
 there (777). The default is assets/pdf/, but you may configure it to fit your
 needs.
 
-No create the chunks, that you want to use in your snippet calls. You may create
+Now create the chunks, that you want to use in your snippet calls. You may create
 different chunks for different websites, if you use htmlToPDF in different
 templates.
 Open the templates, where you want to use htmlToPDF and add the call to the

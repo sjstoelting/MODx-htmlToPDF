@@ -28,6 +28,7 @@ All chunks make use of the placeholders as defined in other MODX snippets.
 
 ###Installation###
 
+###Upload###
 For the installation you need to upload the TCPDF in the directory:  
 
     assets/lib/tcpdf/  
@@ -36,10 +37,17 @@ The snippet classes should be located at:
 
     assets/snippets/htmlToPDF/  
 
+###Create the snippet htmlToPDF###
 Create a new snippet with the source of snippet.hmtlToPDF.php and call the
 snippet within your templates, probably at the top of the template.
 For the snippet call you can add several chunks as templates. Examples are in
 the assets/snippets/htmlToPDF/chunks/ directory.
+
+###Create the plugin htmlToPDF###
+Create a new plugin with the source of plugin.htmlToPDF.
+On the page "System Events" choose these two options in the area "Documents":
+- OnBeforeDocFormDelete
+- OnDocFormSave
 
 ###Example Snippet Call###
 

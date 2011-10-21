@@ -22,10 +22,17 @@ assets/lib/tcpdf/
 The snippet classes should be located at:
 assets/snippets/htmlToPDF/
 
+Create the snippet htmlToPDF
 Create a new snippet with the source of snippet.hmtlToPDF.php and call the
 snippet within your templates, probably at the top of the template.
 For the snippet call you can add several chunks as templates. Examples are in
 the assets/snippets/htmlToPDF/chunks/ directory.
+
+Create the plugin htmlToPDF
+Create a new plugin with the source of plugin.htmlToPDF.
+On the page "System Events" choose these two options in the area "Documents":
+- OnBeforeDocFormDelete
+- OnDocFormSave
 
 Here is an example for a call to htmlToPDF:
 [!htmlToPDF? &author=`Stefanie Janine Stoelting` &tvKeywords=`documentTags` &headerLogo=`logo.png` &chunkContentFooter=`pdf-contentfooter` &chunkStandardHeader=`pdf-header-text` &chunkStyle=`pdf-style`!]
