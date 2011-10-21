@@ -46,8 +46,9 @@ the assets/snippets/htmlToPDF/chunks/ directory.
 ###Create the plugin htmlToPDF###
 Create a new plugin with the source of plugin.htmlToPDF.
 On the page "System Events" choose these two options in the area "Documents":
-* OnBeforeDocFormDelete
-* OnDocFormSave
+
+ * OnBeforeDocFormDelete
+ * OnDocFormSave
 
 ###Example Snippet Call###
 
