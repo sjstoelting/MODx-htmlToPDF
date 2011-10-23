@@ -49,8 +49,6 @@ try {
     }
     $documentName = $outputPdfPath . $documentName . '.pdf';
     
-    $modx->logEvent(0, 2, '$documentName: ' . $documentName, 'htmlToPDF plugin');
-
     if (file_exists($documentName)) {
       unlink($documentName);
       if ($logDeletion) {
