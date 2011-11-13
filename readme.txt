@@ -12,6 +12,7 @@ This MODX snippet uses TCPDF, available at http://www.tcpdf.org/, to create the
 PDF Files from the content of a web document, published with MODX. TCPDF is
 part of the package. TCPDF itself is licensed under LGPL V3, as described at
 http://www.tcpdf.org/license.php.
+The current version of TCPDF used in this package is 5.9.134.
 
 The main goal is to create highly configurable PDF documents. This is possible
 with a lot of parameters, that one can use on a call and the usage of chunks.
@@ -160,4 +161,8 @@ The following paramaters are available:
 |----------------------------|------------------------------------------------|-------------------|-----------------|
 | headerImageHeight          | Sets the height for a logo in the header of    | int               | 20              |
 |                            | the PDF document in mm.                        |                   |                 |
+|----------------------------|------------------------------------------------|-------------------|-----------------|
+| printHeader                | Whether to print a header, or not.             | Number 0 or 1     | 1               |
+|----------------------------|------------------------------------------------|-------------------|-----------------|
+| printFooter                | Whether to print a footer, or not.             | Number 0 or 1     | 1               |
 ---------------------------------------------------------------------------------------------------------------------

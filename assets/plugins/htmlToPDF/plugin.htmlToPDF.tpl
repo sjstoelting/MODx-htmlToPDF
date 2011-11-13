@@ -1,7 +1,7 @@
 //<?php
 /**
  * Plugin Name: htmlToPDF
- * Description: <strong>0.1.2</strong> Deletes PDF document on changes of the original document
+* Description: <strong>0.1.3</strong> Deletes PDF document on changes of the original document
  * Events: onDocFormSave, OnBeforeDocFormDelete
  * 
  * Configuration: $logDeletion=Log the delete event?;list;true,false;true
@@ -16,8 +16,8 @@
  * @link http://www.tcpdf.org/
  * @package htmlToPDF
  * @license LGPL
- * @since 2011/10/20
- * @version 0.1.2
+ * @since 2011/11/13
+ * @version 0.1.3
  */
 $e = & $modx->event; 
 

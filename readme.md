@@ -20,7 +20,7 @@ This MODX snippet uses TCPDF, available at [http://www.tcpdf.org/](http://www.tc
 PDF Files from the content of a web document, published with MODX. TCPDF is
 part of the package. TCPDF itself is licensed under LGPL V3, as described at
 [http://www.tcpdf.org/license.php](http://www.tcpdf.org/license.php).
-The current version of TCPDF used in this package is 5.9.067.
+The current version of TCPDF used in this package is 5.9.134.
 
 The main goal is to create highly configurable PDF documents. This is possible
 with parameters that one can use in the snippet tag and through the usage of chunks.
@@ -172,5 +172,9 @@ The following parameters are available:
 <tr><td>outputPdfPath</td><td>The path, where the PDF documents are stored. You <br />need to give read, delete, and create rights to that folder (777).</td><td>string</td><td>assets/pdf/</td></tr>
 
 <tr><td>headerImageHeight</td><td>Sets the height for a logo in the header of the PDF document in mm.</td><td>int</td><td>20</td></tr>
+
+<tr><td>printHeader</td><td>Whether to print a header, or not.</td><td>Number 0 or 1</td><td>1</td></tr>
+
+<tr><td>printFooter</td><td>Whether to print a footer, or not.</td><td>Number 0 or 1</td><td>1</td></tr>
 
 </table>

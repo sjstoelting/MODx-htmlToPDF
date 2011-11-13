@@ -1,7 +1,7 @@
 <?php
 /**
  * Snippet Name: htmlToPDF
- * Description: <strong>0.1.2</strong> Returns the current document as PDF
+ * Description: <strong>0.1.3</strong> Returns the current document as PDF
  *
  * @name htmlToPDF
  *
@@ -11,8 +11,8 @@
  * @link http://www.tcpdf.org/
  * @package htmlToPDF
  * @license LGPL
- * @since 2011/10/18
- * @version 0.1.2
+ * @since 2011/11/13
+ * @version 0.1.3
  * @example [!htmlToPDF? &author=`Stefanie Janine Stoelting` &tvKeywords=`documentTags` &headerLogo=`logo.png` &chunkContentFooter=`pdf-contentfooter` &chunkStandardHeader=`pdf-header-text` &chunkStyle=`pdf-style`!]
  */
 
@@ -40,7 +40,7 @@ try {
 
     $outputPdfPath = isset($outputPdfPath) ? $outputPdfPath : PATH_TO_PDF_OUTPUT;
     if (realpath($basePath . $outputPdfPath) === FALSE) $outputPdfPath = PATH_TO_PDF_OUTPUT;
-
+    
     // Include the rquired files
     require_once($basePath . $tcpdfPath . 'config/lang/eng.php');
     require_once($basePath . $tcpdfPath . 'tcpdf.php');
@@ -70,19 +70,28 @@ try {
     $modxHelper = modxHelper::getInstance();
 
     // Set document information
+    $pdf->setPrintHeader(isset($printHeader) ? $printHeader == 1 : true);
+    $pdf->setPrintFooter(isset($printFooter) ? $printFooter == 1 : true);
+    
     $pdf->setLanguageArray(isset($languageCode) ? $languageCode : 'EN');
     $pdf->setDateFormat(isset($dateFormat) ? $dateFormat : 'Y-m-d');
     $marginLeft = isset($marginLeft) && is_numeric($marginLeft) ? $marginLeft : 10;
     $marginRight = isset($marginRight) && is_numeric($marginRight) ? $marginRight : 10;
     $marginTop = isset($marginTop) && is_numeric($marginTop) ? $marginTop : 30;
     $pdf->SetAutoPageBreak(TRUE, isset($marginBottom) && is_numeric($marginBottom) ? $marginBottom : 25);
-    $pdf->SetHeaderMargin(isset($marginHeader) && is_numeric($marginHeader) ? $marginHeader : 5);
-    $pdf->SetFooterMargin(isset($marginFooter) && is_numeric($marginFooter) ? $marginFooter : 10);
-    $pdf->setHeaderFontType(isset($headerFontType) ? $headerFontType : htmlToPDF::DEFAULT_FONT_TYPE);
-    $pdf->setHeaderFontSize(isset($headerFontSize) && is_numeric($headerFontSize) ? $headerFontSize : htmlToPDF::DEFAULT_HEADER_FONT_SIZE);
-    $pdf->setImageFile(isset($headerLogo) ? $basePath . $tcpdfPath : '', isset($headerLogo) ? $headerLogo : '');
-
-    $pdf->setHeaderFontBold(isset($headerFontBold) ? $headerFontBold == 1 : true);
+    
+    if (isset($printHeader) ? $printHeader == 1 : true) {
+      $pdf->SetHeaderMargin(isset($marginHeader) && is_numeric($marginHeader) ? $marginHeader : 5);
+      $pdf->setHeaderFontType(isset($headerFontType) ? $headerFontType : htmlToPDF::DEFAULT_FONT_TYPE);
+      $pdf->setHeaderFontSize(isset($headerFontSize) && is_numeric($headerFontSize) ? $headerFontSize : htmlToPDF::DEFAULT_HEADER_FONT_SIZE);
+      $pdf->setImageFile(isset($headerLogo) ? $basePath . $tcpdfPath : '', isset($headerLogo) ? $headerLogo : '');
+      $pdf->setHeaderFontBold(isset($headerFontBold) ? $headerFontBold == 1 : true);
+    }
+    
+    if (isset($printFooter) ? $printFooter == 1 : true) {
+      $pdf->SetFooterMargin(isset($marginFooter) && is_numeric($marginFooter) ? $marginFooter : 10);
+    }
+    
     $contentFontType = isset($contentFontType) ? $contentFontType : 'times';
     $contentFontSize = isset($contentFontSize) && is_numeric($contentFontSize) ? $contentFontSize : 10;
     $pdf->setLongTitleAboveContent(isset($longTitleAboveContent) ? $longTitleAboveContent == 1 : true);
@@ -108,16 +117,21 @@ try {
             isset($chunkContent) ? $chunkContent : '');
 
     // Set the header data
-    $pdf->SetHeaderData($basePath . $tcpdfPath);
+    if (isset($printHeader) ? $printHeader == 1 : true) {
+      $pdf->SetHeaderData($basePath . $tcpdfPath);
 
-    // Set header and footer fonts
-    $pdf->setHeaderFont(
-            Array(
-              $pdf->getHeaderFontType(),
-              //$pdf->getHeaderFontBold(),
-              '',
-              $pdf->getHeaderFontSize()
-            ));
+      // Set header and footer fonts
+      $pdf->setHeaderFont(
+              Array(
+                $pdf->getHeaderFontType(),
+                //$pdf->getHeaderFontBold(),
+                '',
+                $pdf->getHeaderFontSize()
+              ));
+    }
+    
+    // Set the footer data
+    if (isset($printFooter) ? $printFooter == 1 : true) {
     $pdf->setFooterFont(
             Array(
               $pdf->getFooterFontType(),
@@ -125,6 +139,7 @@ try {
               '',
               $pdf->getFooterFontSize()
             ));
+    }
 
     // Set margins
     $pdf->SetMargins($marginLeft, $marginTop, $marginRight);
