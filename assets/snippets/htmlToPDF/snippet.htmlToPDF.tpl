@@ -11,9 +11,9 @@
  * @link http://www.tcpdf.org/
  * @package htmlToPDF
  * @license LGPL
- * @since 2011/11/13
- * @version 0.1.3
- * @example [!htmlToPDF? &author=`Stefanie Janine Stoelting` &tvKeywords=`documentTags` &headerLogo=`logo.png` &chunkContentFooter=`pdf-contentfooter` &chunkStandardHeader=`pdf-header-text` &chunkStyle=`pdf-style`!]
+ * @since 2011/11/26
+ * @version 0.1.4
+ * @example [!htmlToPDF? &author=`Stefanie Janine Stoelting` &tvKeywords=`documentTags` &headerLogo=`logo.png` &chunkContentFooter=`pdf-contentfooter` &chunkStandardHeader=`pdf-header-text` &chunkStyle=`pdf-style` &lineColor=`0,0,0!]
  */
 
 // Encapsulate everything in a try
@@ -111,6 +111,9 @@ try {
     $pdf->setContentFooter(isset($chunkContentFooter) ? $chunkContentFooter : '');
     $pdf->setCSS(isset($chunkStyle) ? $chunkStyle : '');
 
+    // Set the color of the header and footer line
+    $pdf->setLineColor(isset($lineColor) && (is_array(explode(',', $lineColor))) ? explode(',', $lineColor) : array(0, 0, 0));
+    
     // Set the content
     $pdf->setContent(
             isset($chunkContent) ? !empty($chunkContent) : false,

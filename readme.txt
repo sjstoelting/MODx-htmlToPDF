@@ -165,4 +165,6 @@ The following paramaters are available:
 | printHeader                | Whether to print a header, or not.             | Number 0 or 1     | 1               |
 |----------------------------|------------------------------------------------|-------------------|-----------------|
 | printFooter                | Whether to print a footer, or not.             | Number 0 or 1     | 1               |
+|----------------------------|------------------------------------------------|-------------------|-----------------|
+| lineColor                  | String with 3 comma separated values as RGB.   | string            | 0,0,0           |
 ---------------------------------------------------------------------------------------------------------------------

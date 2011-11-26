@@ -177,4 +177,6 @@ The following parameters are available:
 
 <tr><td>printFooter</td><td>Whether to print a footer, or not.</td><td>Number 0 or 1</td><td>1</td></tr>
 
+<tr><td>lineColor</td><td>String with 3 comma separated values as RGB.</td><td>string</td><td>0,0,0</td></tr>
+
 </table>
