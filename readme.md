@@ -20,7 +20,7 @@ This MODX snippet uses TCPDF, available at [http://www.tcpdf.org/](http://www.tc
 PDF Files from the content of a web document, published with MODX. TCPDF is
 part of the package. TCPDF itself is licensed under LGPL V3, as described at
 [http://www.tcpdf.org/license.php](http://www.tcpdf.org/license.php).
-The current version of TCPDF used in this package is 5.9.134.
+The current version of TCPDF used in this package is 5.9.145.
 
 The main goal is to create highly configurable PDF documents. This is possible
 with parameters that one can use in the snippet tag and through the usage of chunks.

@@ -10,8 +10,8 @@
  * @link http://www.tcpdf.org/
  * @package htmlToPDF
  * @license LGPL
- * @since 2011/11/13
- * @version 0.1.3
+ * @since 2012/02/12
+ * @version 0.1.3.1
  */
 class htmlToPDF extends TCPDF {
   /**

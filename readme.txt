@@ -1,6 +1,8 @@
 The package contains source for the CMS MODX Evolution, available at
 http://modxcms.com/
 
+The current version of modx-htmlToPDF is 1.3.1, the release date is 2012/02/12.
+
 If you use Microsoft Windows in any version, please notice, that all files of
 this project have UNIX based line breaks.
 
@@ -12,7 +14,7 @@ This MODX snippet uses TCPDF, available at http://www.tcpdf.org/, to create the
 PDF Files from the content of a web document, published with MODX. TCPDF is
 part of the package. TCPDF itself is licensed under LGPL V3, as described at
 http://www.tcpdf.org/license.php.
-The current version of TCPDF used in this package is 5.9.134.
+The current version of TCPDF used in this package is 5.9.145.
 
 The main goal is to create highly configurable PDF documents. This is possible
 with a lot of parameters, that one can use on a call and the usage of chunks.
