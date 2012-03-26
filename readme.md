@@ -9,6 +9,9 @@ Currently it is not planned to create a copy for MODX Revolution.
 If you use Microsoft Windows in any version, please notice, that all files of
 this project have UNIX based line breaks.
 
+You find news about this project on my site at http://stefanie-stoelting.de/htmltopdf-news.html,
+the news feed is available at http://stefanie-stoelting.de/htmltopdf-news-rss-feed.html.
+
 ###License###
 
 The source is licensed under the GNU Lesser General Public License, version 2.1
