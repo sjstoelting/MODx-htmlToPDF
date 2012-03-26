@@ -1,7 +1,7 @@
 <?php
 /**
  * Snippet Name: htmlToPDF
- * Description: <strong>0.1.3.1</strong> Returns the current document as PDF
+ * Description: <strong>0.1.3.2</strong> Returns the current document as PDF
  *
  * @name htmlToPDF
  *
@@ -11,8 +11,8 @@
  * @link http://www.tcpdf.org/
  * @package htmlToPDF
  * @license LGPL
- * @since 2012/02/12
- * @version 0.1.3.1
+ * @since 2012/03/26
+ * @version 0.1.3.2
  * @example [!htmlToPDF? &author=`Stefanie Janine Stoelting` &tvKeywords=`documentTags` &headerLogo=`logo.png` &chunkContentFooter=`pdf-contentfooter` &chunkStandardHeader=`pdf-header-text` &chunkStyle=`pdf-style` &lineColor=`0,0,0!]
  */
 
