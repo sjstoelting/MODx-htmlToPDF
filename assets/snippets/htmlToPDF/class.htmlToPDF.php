@@ -193,7 +193,7 @@ class htmlToPDF extends TCPDF {
    * YAMS id - (yams_id) will be replaced in chunks by this value.
    * @var int
    */
-  private $_yamsId;
+  private $_yamsId = '';
 
   /**
    * Constructor, overwrites the TCPDF constructor to set some properties, that
