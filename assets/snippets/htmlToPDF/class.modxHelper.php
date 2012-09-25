@@ -131,4 +131,18 @@ final class modxHelper {
   {
     return preg_replace('#style=("|\')(.*?)("|\')#', '', $content);
   } // removeInlineCSS
+
+  /**
+   * Removes YAMS tags from  HTML content.
+   *
+   * @param string $content The HTML content
+   * @return string The content without YAMS tags
+   */
+  
+  public function removeYAMSTags($content)
+  {
+    $content = preg_replace('#\(/?yams[^\)]+\)#', '', $content);
+    return preg_replace('#\(lang:[^\)]+\)#', '', $content);
+  } // removeYAMSTags
+    
 } // modxHelper
