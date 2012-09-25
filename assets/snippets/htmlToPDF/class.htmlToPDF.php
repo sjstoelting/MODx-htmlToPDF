@@ -189,6 +189,11 @@ class htmlToPDF extends TCPDF {
    */
   private $_headerImageHeight;
 
+  /**
+   * YAMS id - (yams_id) will be replaced in chunks by this value.
+   * @var int
+   */
+  private $_yamsId;
 
   /**
    * Constructor, overwrites the TCPDF constructor to set some properties, that
@@ -307,19 +312,36 @@ class htmlToPDF extends TCPDF {
     $result = $content;
 
     if (!empty($content)) {
-      // Replace [+pagetitle+]
-      $result = str_replace(
-              '[+pagetitle+]',
-              $modx->documentObject['pagetitle'],
-              $result
-              );
 
-      // Replace [+longtitle+]
-      $result = str_replace(
-              '[+longtitle+]',
-              $modx->documentObject['longtitle'],
-              $result
-              );
+      if ($this->getYamsId() == '') {
+        // Replace [+pagetitle+]
+        $result = str_replace(
+                '[+pagetitle+]',
+                $modx->documentObject['pagetitle'],
+                $result
+                );
+
+        // Replace [+longtitle+]
+        $result = str_replace(
+                '[+longtitle+]',
+                $modx->documentObject['longtitle'],
+                $result
+                );
+      } else {
+        // Replace [+pagetitle+]
+        $result = str_replace(
+                '[+pagetitle_(yams_id)+]',
+                $modx->documentObject['pagetitle_'.$this->getYamsId()],
+                $result
+                );
+
+        // Replace [+longtitle+]
+        $result = str_replace(
+                '[+longtitle_(yams_id)+]',
+                $modx->documentObject['longtitle_'.$this->getYamsId()],
+                $result
+                );
+      }
 
       // Replace [+website+]
       $result = str_replace(
@@ -388,8 +410,6 @@ class htmlToPDF extends TCPDF {
    */
   public function setImageFile($realPathToTCPDF, $value)
   {
-    global $modx;
-
     $checkFile = $realPathToTCPDF . self::TCPDF_IMAGE_FOLDER . $value;
 
     if (file_exists($checkFile)) {
@@ -639,7 +659,7 @@ class htmlToPDF extends TCPDF {
    *
    * @global object $modx
    * @param <type> $chunk The name of the content chunk.
-   * @return string The
+   * @return string The content footer HTML
    */
   public function setContentFooter($chunk)
   {
@@ -667,6 +687,29 @@ class htmlToPDF extends TCPDF {
   } // getContentFooter
 
   /**
+   * Sets the YAMS id.
+   *
+   * @param <type> $id The YAMS id
+   * @return string The YAMS id
+   */
+  public function setYamsId($id)
+  {
+    $this->_yamsId = $id;
+    
+    return $this->_yamsId;
+  } // setYamsId
+
+  /**
+   * Returns the YAMS id.
+   *
+   * @return string The YAMS id
+   */
+  public function getYamsId()
+  {
+    return $this->_yamsId;
+  } // getYamsId
+
+  /**
    * Override SetKeywords, should not be available outside this class.
    * Reads the keyword from a template variable.
    * 
@@ -678,9 +721,9 @@ class htmlToPDF extends TCPDF {
     global $modx;
     $modxHelper = modxHelper::getInstance();
 
-    if (!empty($value)) {
+    if (!empty($tvName)) {
       $this->_keyWords = $modxHelper->getTVContent(
-              $value,
+              $tvName,
               $modx->documentObject['id']);
     } else {
       $this->_keyWords = '';
@@ -730,12 +773,12 @@ class htmlToPDF extends TCPDF {
     $this->_cssStyle = $modx->getChunk($chunk);
 
     // Check whether the style start exists
-    if (!strpos($css, '<style>')) {
+    if (!strpos($this->_cssStyle, '<style>')) {
       $this->_cssStyle = '<style>' . $this->_cssStyle;
     }
 
     // Check whether the style end exists
-    if (!strpos($css, '</style>')) {
+    if (!strpos($this->_cssStyle, '</style>')) {
       $this->_cssStyle = $this->_cssStyle . '</style>';
     }
 
@@ -901,6 +944,10 @@ class htmlToPDF extends TCPDF {
 
       $chunk = $modx->getChunk($content);
 
+      if ($this->getYamsId() != '') {
+        $chunk = str_replace('(yams_id)', $this->getYamsId(), $chunk);
+      }
+
       // Parse the content from the chunk with the MODX functions
       $result = $modx->parseDocumentSource($chunk);
 
@@ -916,11 +963,22 @@ class htmlToPDF extends TCPDF {
 
       // Check, whether the long title should be above the content
       if ($this->_longTitleAboveContent) {
-        $result = '<h1>' . $modx->documentObject['longtitle'] . "</h1>\n";
+        if ($this->getYamsId() == '')
+          $result = '<h1>' . $modx->documentObject['longtitle'] . "</h1>\n";
+        else{
+          $result = '<h1>' . $modx->documentObject['longtitle'.'_'.$this->getYamsId()] . "</h1>\n";
+        }
       }
 
+      // Get document content
+      if ($this->getYamsId() == '') {
+        $documentContent = $modx->documentObject['content'];
+      } else {
+        $documentContent = $modx->documentObject['content'.'_'.$this->getYamsId()];
+        $documentContent = str_replace('(yams_id)', $this->getYamsId(), $documentContent);
+      }
+  
       // Check for calls to htmlToPDF in the content and remove the calls
-      $documentContent = $modx->documentObject['content'];
       $start = strpos($documentContent, '[!htmlToPDF?');
       $end = strpos($documentContent, '!]', $start);
 
@@ -934,6 +992,8 @@ class htmlToPDF extends TCPDF {
         $result = $modxHelper->removeInlineCSS($result);
       }
     }
+
+    $result = $modxHelper->removeYAMSTags($result);
 
     // Parse the URLs and replace them to work from a PDF document,
     // add CSS style above the content
@@ -1018,8 +1078,11 @@ class htmlToPDF extends TCPDF {
       parent::lastPage();
 
       // Close and output PDF document
-      $documentName = $outputPath .$modx->documentObject['alias'] . '.pdf';
-
+      if ($this->getYamsId() == '') {
+        $documentName = $outputPath .$modx->documentObject['alias'] . '.pdf';
+      } else {
+        $documentName = $outputPath .$modx->documentObject['alias'] . '_' . $this->getYamsId() . '.pdf';
+      }
       if (!file_exists($basePath . $documentName)) {
         parent::Output($basePath . $documentName, 'F');
       } elseif ($this->_rewritePDF) {

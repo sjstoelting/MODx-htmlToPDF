@@ -112,7 +112,10 @@ try {
     $pdf->setCSS(isset($chunkStyle) ? $chunkStyle : '');
 
     // Set the color of the header and footer line
-    $pdf->setLineColor(isset($lineColor) && (is_array(explode(',', $lineColor))) ? explode(',', $lineColor) : array(0, 0, 0));
+    $pdf->setDrawColor(isset($lineColor) && (is_array(explode(',', $lineColor))) ? explode(',', $lineColor) : array(0, 0, 0));
+    
+    // Set the YAMS id
+    $pdf->setYamsId(isset($yamsId) ? $yamsId : '');
     
     // Set the content
     $pdf->setContent(
