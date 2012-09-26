@@ -102,8 +102,13 @@ try {
 
     $pdf->SetCreator(PDF_CREATOR);
     $pdf->SetAuthor(isset($author) ? $author : '');
-    $pdf->SetTitle($modx->documentObject['pagetitle']);
-    $pdf->SetSubject($modx->documentObject['longtitle']);
+    if ($pdf->getYamsId() == '') {
+      $pdf->SetTitle($pdf->_documentObject['pagetitle']);
+      $pdf->SetSubject($pdf->_documentObject['longtitle']);
+    } else {
+      $pdf->SetTitle($pdf->_documentObject['pagetitle_'.$pdf->getYamsId()]);
+      $pdf->SetSubject($pdf->_documentObject['longtitle_'.$pdf->getYamsId()]);
+    }
     $pdf->SetKeywords($tvKeywords = isset($tvKeywords) ? $tvKeywords : '');
 
     // Set the chunk contents

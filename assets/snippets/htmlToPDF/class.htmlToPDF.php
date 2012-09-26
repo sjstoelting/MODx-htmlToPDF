@@ -13,6 +13,11 @@
  * @since 2012/03/26
  * @version 0.1.3.2
  */
+
+if (!class_exists('htpChunkie')) {
+    include(MODX_BASE_PATH . 'assets/snippets/htmlToPDF/chunkie/chunkie.class.inc.php');
+}
+
 class htmlToPDF extends TCPDF {
   /**
    * Constant string The default header font type.
@@ -194,6 +199,13 @@ class htmlToPDF extends TCPDF {
    * @var int
    */
   private $_yamsId;
+  
+  /**
+   * The current document object with all template variables
+   * @var int
+   */
+  public $_documentObject;
+  
 
   /**
    * Constructor, overwrites the TCPDF constructor to set some properties, that
@@ -214,6 +226,8 @@ class htmlToPDF extends TCPDF {
           $footerFontSize, $footerPositionFromBottom,
           $headerImageHeight=self::DEFAULT_HEADER_IMAGE_HEIGHT)
   {
+    global $modx;  
+      
     // Set default values with constants
     $this->_headerFontType = self::DEFAULT_FONT_TYPE;
     $this->_headerFontSize = self::DEFAULT_HEADER_FONT_SIZE;
@@ -222,6 +236,9 @@ class htmlToPDF extends TCPDF {
     $this->_footerPositionFromBottom = self::DEFAULT_FOOTER_POSITION_FROM_BOTTOM;
     $this->_dateFormat = self::DEFAULT_DATE_FORMAT;
     $this->_footerContent = self::DEFAULT_PAGE_FOOTER_CONTENT;
+    
+    $templateVars = $modx->getTemplateVarOutput('*', $modx->documentObject['id'], $modx->documentObject['published']);
+    $this->_documentObject = array_merge($modx->documentObject, $templateVars);
 
     // Set the footer option before calling the parent constructor, otherwise
     // it is not possible, to set the footer flexible
@@ -312,86 +329,28 @@ class htmlToPDF extends TCPDF {
     $result = $content;
 
     if (!empty($content)) {
-
-      if ($this->getYamsId() == '') {
-        // Replace [+pagetitle+]
-        $result = str_replace(
-                '[+pagetitle+]',
-                $modx->documentObject['pagetitle'],
-                $result
-                );
-
-        // Replace [+longtitle+]
-        $result = str_replace(
-                '[+longtitle+]',
-                $modx->documentObject['longtitle'],
-                $result
-                );
-      } else {
-        // Replace [+pagetitle+]
-        $result = str_replace(
-                '[+pagetitle_(yams_id)+]',
-                $modx->documentObject['pagetitle_'.$this->getYamsId()],
-                $result
-                );
-
-        // Replace [+longtitle+]
-        $result = str_replace(
-                '[+longtitle_(yams_id)+]',
-                $modx->documentObject['longtitle_'.$this->getYamsId()],
-                $result
-                );
+    
+      // Replace YAMS ID
+      if ($this->getYamsId() != '') {
+        $result = str_replace('(yams_id)', $this->getYamsId(), $result);
       }
+      
+      // Get values to set 
+      $currentUrl = $modx->makeUrl((int) $this->_documentObject['id'], '', '', 'full');
+      $editedby = $modx->getUserInfo($this->_documentObject['editedby']);
 
-      // Replace [+website+]
-      $result = str_replace(
-              '[+website+]',
-              $modx->getConfig('site_url'),
-              $result
-              );
+      // Parse chunk with PHx
+      $parser = new htpChunkie('@CODE:' . $content);
+      $parser->CreateVars($this->_documentObject);
+      $parser->AddVar('website', $modx->getConfig('site_url'));
+      $parser->AddVar('currentsite', $currentUrl);
+      $parser->AddVar('author', $editedby['fullname']);
+      $parser->AddVar('date', date($dateFormat, $this->_documentObject['publishedon']));
+      $parser->AddVar('publishedon', date($dateFormat, $this->_documentObject['publishedon']));
+      $parser->AddVar('editedon', date($dateFormat, $this->_documentObject['editedon']));
+      $parser->AddVar('createdon', date($dateFormat, $this->_documentObject['createdon']));
 
-      // Replace [+currentsite+]
-      $result = str_replace(
-              '[+currentsite+]',
-              $modx->makeUrl((int)$modx->documentObject['id'], '', '', 'full'),
-              $result
-              );
-
-      // Replace [+author+]
-      $user = $modx->getUserInfo($modx->documentObject['editedby']);
-      $result = str_replace(
-              '[+author+]',
-              $user[fullname],
-              $result
-              );
-
-      // Replace [+date+]
-      $result = str_replace(
-              '[+date+]',
-              date($dateFormat, $modx->documentObject['publishedon']),
-              $result
-              );
-
-      // Replace [+publishedon+]
-      $result = str_replace(
-              '[+publishedon+]',
-              date($dateFormat, $modx->documentObject['publishedon']),
-              $result
-              );
-
-      // Replace [+editedon+]
-      $result = str_replace(
-              '[+editedon+]',
-              date($dateFormat, $modx->documentObject['editedon']),
-              $result
-              );
-
-      // Replace [+createdon+]
-      $result = str_replace(
-              '[+createdon+]',
-              date($dateFormat, $modx->documentObject['createdon']),
-              $result
-              );
+      $result = $parser->Render();
     }
 
     return $result;
@@ -718,13 +677,8 @@ class htmlToPDF extends TCPDF {
    */
   public function SetKeywords($tvName)
   {
-    global $modx;
-    $modxHelper = modxHelper::getInstance();
-
     if (!empty($tvName)) {
-      $this->_keyWords = $modxHelper->getTVContent(
-              $tvName,
-              $modx->documentObject['id']);
+      $this->_documentObject[$tvName];
     } else {
       $this->_keyWords = '';
     }
@@ -745,15 +699,19 @@ class htmlToPDF extends TCPDF {
    */
   public function SetHeaderData($realPathToTCPDF)
   {
-    global $modx;
-
     list($width, $height, $type, $attr) = getimagesize(
             $realPathToTCPDF . self::TCPDF_IMAGE_FOLDER . $this->getImageFile());
+    
+    if ($this->getYamsId() == '') {
+      $pagetitle = $this->_documentObject['pagetitle'];
+    } else {
+      $pagetitle = $this->_documentObject['pagetitle_'.$this->getYamsId()];
+    }
 
     parent::SetHeaderData(
             $this->getImageFile(),
             $this->_headerImageHeight,
-            $modx->documentObject['pagetitle'],
+            $pagetitle,
             $this->getHeaderText()
             );
   } // SetHeaderData
@@ -943,13 +901,16 @@ class htmlToPDF extends TCPDF {
       // Create the content with a chunk
 
       $chunk = $modx->getChunk($content);
-
+      
       if ($this->getYamsId() != '') {
         $chunk = str_replace('(yams_id)', $this->getYamsId(), $chunk);
       }
 
-      // Parse the content from the chunk with the MODX functions
-      $result = $modx->parseDocumentSource($chunk);
+      // Parse chunk with PHx
+      $parser = new htpChunkie('@CODE:' . $chunk);
+      $parser->CreateVars($this->_documentObject);
+
+      $result = $parser->Render();
 
         // Strip inline CSS
       if($this->_stripCSSFromContent) {
@@ -960,21 +921,21 @@ class htmlToPDF extends TCPDF {
       $this->_contentFooter = '';
     } else {
       // Create the content with standard content and parameters
-
+      
       // Check, whether the long title should be above the content
       if ($this->_longTitleAboveContent) {
         if ($this->getYamsId() == '')
-          $result = '<h1>' . $modx->documentObject['longtitle'] . "</h1>\n";
+          $result = '<h1>' . $this->_documentObject['longtitle'] . "</h1>\n";
         else{
-          $result = '<h1>' . $modx->documentObject['longtitle'.'_'.$this->getYamsId()] . "</h1>\n";
+          $result = '<h1>' . $this->_documentObject['longtitle'.'_'.$this->getYamsId()] . "</h1>\n";
         }
       }
 
       // Get document content
       if ($this->getYamsId() == '') {
-        $documentContent = $modx->documentObject['content'];
+        $documentContent = $this->_documentObject['content'];
       } else {
-        $documentContent = $modx->documentObject['content'.'_'.$this->getYamsId()];
+        $documentContent = $this->_documentObject['content'.'_'.$this->getYamsId()];
         $documentContent = str_replace('(yams_id)', $this->getYamsId(), $documentContent);
       }
   
@@ -984,8 +945,11 @@ class htmlToPDF extends TCPDF {
 
       $documentContent = str_replace(substr($documentContent, $start, $end - $start + 2), '', $documentContent);
       
-      // Add the document content and parse the content for chunks, etc.
-      $result .= $modx->parseDocumentSource($documentContent);
+      // Parse chunk with PHx
+      $parser = new htpChunkie('@CODE:' . $documentContent);
+      $parser->CreateVars($this->_documentObject);
+
+      $result .= $parser->Render();;
 
       // Strip inline CSS
       if($this->_stripCSSFromContent) {
@@ -1079,9 +1043,9 @@ class htmlToPDF extends TCPDF {
 
       // Close and output PDF document
       if ($this->getYamsId() == '') {
-        $documentName = $outputPath .$modx->documentObject['alias'] . '.pdf';
+        $documentName = $outputPath .$this->_documentObject['alias'] . '.pdf';
       } else {
-        $documentName = $outputPath .$modx->documentObject['alias'] . '_' . $this->getYamsId() . '.pdf';
+        $documentName = $outputPath .$this->_documentObject['alias'] . '_' . $this->getYamsId() . '.pdf';
       }
       if (!file_exists($basePath . $documentName)) {
         parent::Output($basePath . $documentName, 'F');

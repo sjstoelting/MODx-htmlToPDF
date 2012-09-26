@@ -88,40 +88,6 @@ final class modxHelper {
   } // rewriteUrls
 
   /**
-   * Returns the content of a template variable for the document identifier.
-   *
-   * @global object $modx
-   * @param string $tvName The name of the template variable
-   * @param int $docID The document identifier
-   * @return string The content of of the template variable for the document identifier
-   */
-  public function getTVContent($tvName, $docID) {
-    global $modx;
-
-    $result = '';
-
-    // Get the real table names
-    $site_tmplvars = $modx->getFullTableName('site_tmplvars');
-    $site_tmplvar_contentvalues = $modx->getFullTableName('site_tmplvar_contentvalues');
-
-    $sSQL = 'SELECT `value` '
-           ."FROM $site_tmplvars "
-           ."INNER JOIN $site_tmplvar_contentvalues "
-           ."ON $site_tmplvars.`id` = $site_tmplvar_contentvalues.`tmplvarid` "
-           ."WHERE $site_tmplvars.`name` = '" . mysql_real_escape_string($tvName) . '\' '
-           ."AND $site_tmplvar_contentvalues.`contentid` = " . mysql_real_escape_string($docID);
-
-    $rRecordset =  $modx->db->query($sSQL);
-
-    $row = mysql_fetch_object($rRecordset);
-    if ($row) {
-      $result = $row->value;
-    }
-
-    return $result;
-  } // getTVContent
-
-  /**
    * Removes inline CSS from HTML content.
    *
    * @param string $content The HTML content that may contain inline CSS
