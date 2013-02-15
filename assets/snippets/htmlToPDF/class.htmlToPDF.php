@@ -14,7 +14,7 @@
  * @version 0.1.3.2
  */
 
-if (!class_exists('htpChunkie')) {
+if (!class_exists('evoChunkie')) {
     include(MODX_BASE_PATH . 'assets/snippets/htmlToPDF/chunkie/chunkie.class.inc.php');
 }
 
@@ -340,7 +340,7 @@ class htmlToPDF extends TCPDF {
       $editedby = $modx->getUserInfo($this->_documentObject['editedby']);
 
       // Parse chunk with PHx
-      $parser = new htpChunkie('@CODE:' . $content);
+      $parser = new evoChunkie('@CODE:' . $content);
       $parser->CreateVars($this->_documentObject);
       $parser->AddVar('website', $modx->getConfig('site_url'));
       $parser->AddVar('currentsite', $currentUrl);
@@ -907,7 +907,7 @@ class htmlToPDF extends TCPDF {
       }
 
       // Parse chunk with PHx
-      $parser = new htpChunkie('@CODE:' . $chunk);
+      $parser = new evoChunkie('@CODE:' . $chunk);
       $parser->CreateVars($this->_documentObject);
 
       $result = $parser->Render();
@@ -946,7 +946,7 @@ class htmlToPDF extends TCPDF {
       $documentContent = str_replace(substr($documentContent, $start, $end - $start + 2), '', $documentContent);
       
       // Parse chunk with PHx
-      $parser = new htpChunkie('@CODE:' . $documentContent);
+      $parser = new evoChunkie('@CODE:' . $documentContent);
       $parser->CreateVars($this->_documentObject);
 
       $result .= $parser->Render();;
