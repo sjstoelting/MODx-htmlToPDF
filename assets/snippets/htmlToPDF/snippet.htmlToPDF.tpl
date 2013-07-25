@@ -22,9 +22,9 @@ try {
   $isPDF = isset($_GET['isPDF']) ? $_GET['isPDF'] == 'true' : false;
 
   if ($isPDF) {
-    define(PATH_TO_SNIPPET, 'assets/snippets/htmlToPDF/');
-    define(PATH_TO_TCPDF, 'assets/lib/tcpdf/');
-    define(PATH_TO_PDF_OUTPUT, 'assets/pdf/');
+    define('PATH_TO_SNIPPET', 'assets/snippets/htmlToPDF/');
+    define('PATH_TO_TCPDF', 'assets/lib/tcpdf/');
+    define('PATH_TO_PDF_OUTPUT', 'assets/pdf/');
 
     // Check, whether to use MODX_BASE_PATH or to use a defined real path
     $basePath = isset($basePath) && !empty($basePath) ? $basePath : MODX_BASE_PATH;

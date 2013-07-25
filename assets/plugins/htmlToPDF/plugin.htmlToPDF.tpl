@@ -21,7 +21,7 @@
  */
 $e = & $modx->event; 
 
-define(PATH_TO_PDF_OUTPUT, 'assets/pdf/');
+define('PATH_TO_PDF_OUTPUT', 'assets/pdf/');
 
 $logDeletion = (isset($logDeletion) && (strtolower($logDeletion) != 'true' ) && ($logDeletion != '1')) ? false : true;
 
