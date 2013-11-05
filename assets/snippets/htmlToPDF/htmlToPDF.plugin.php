@@ -1,11 +1,11 @@
-//<?php
+<?php
 /**
  * Plugin Name: htmlToPDF
  * Description: <strong>0.1.3.2</strong> Returns the current document as PDF
  * Events: onDocFormSave, OnBeforeDocFormDelete
- * 
+ *
  * Configuration: $logDeletion=Log the delete event?;list;true,false;true
- * 
+ *
  * Deletes PDF documents on changes to the original document.
  *
  * @name htmlToPDF
@@ -19,7 +19,7 @@
  * @since 2012/03/10
  * @version 0.1.3.2
  */
-$e = & $modx->event; 
+$e = & $modx->event;
 
 define('PATH_TO_PDF_OUTPUT', 'assets/pdf/');
 
@@ -28,7 +28,7 @@ $logDeletion = (isset($logDeletion) && (strtolower($logDeletion) != 'true' ) && 
 try {
   $basePath = isset($basePath) && !empty($basePath) ? $basePath : MODX_BASE_PATH;
   if (realpath($basePath) === false)  $basePath = MODX_BASE_PATH;
-  
+
   $outputPdfPath = isset($outputPdfPath) ? $outputPdfPath : PATH_TO_PDF_OUTPUT;
   $outputPdfPath = $basePath . $outputPdfPath;
 
@@ -48,7 +48,7 @@ try {
       $documentName = $modx->documentObject['alias'];
     }
     $documentName = $outputPdfPath . $documentName . '.pdf';
-    
+
     if (file_exists($documentName)) {
       unlink($documentName);
       if ($logDeletion) {
