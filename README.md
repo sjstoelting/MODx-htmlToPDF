@@ -1,3 +1,7 @@
+#THIS PROJECT IS DEPRECATED
+
+htmlToPDF is not maintained anymore. It maybe does not work in Evolution 1.1 anymore. Please fork it and bring it back to life, if you need it.
+
 htmlToPDF
 ==============
 
