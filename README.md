@@ -16,12 +16,12 @@ this project have UNIX based line breaks.
 You find news about this project on my site at http://stefanie-stoelting.de/htmltopdf-news.html,
 the news feed is available at http://stefanie-stoelting.de/htmltopdf-news-rss-feed.html.
 
-###License###
+### License
 
 The source is licensed under the GNU Lesser General Public License, version 2.1
 as published at [http://www.gnu.org/licenses/lgpl-2.1.html](http://www.gnu.org/licenses/lgpl-2.1.html)
 
-###Usage of TCPDF###
+### Usage of TCPDF
 
 This MODX snippet uses TCPDF, available at [http://www.tcpdf.org/](http://www.tcpdf.org/), to create the
 PDF Files from the content of a web document, published with MODX. TCPDF is
@@ -33,9 +33,9 @@ The main goal is to create highly configurable PDF documents. This is possible
 with parameters that one can use in the snippet tag and through the usage of chunks.
 All chunks make use of the placeholders as defined in other MODX snippets.
 
-###Installation###
+### Installation
 
-###Upload###
+### Upload
 For the installation you need to upload the TCPDF in the directory:  
 
     assets/lib/tcpdf/  
@@ -44,20 +44,20 @@ The snippet classes should be located at:
 
     assets/snippets/htmlToPDF/  
 
-###Create the snippet htmlToPDF###
+### Create the snippet htmlToPDF
 Create a new snippet with the source of snippet.hmtlToPDF.php and call the
 snippet within your templates, probably at the top of the template.
 For the snippet call you can add several chunks as templates. Examples are in
 the assets/snippets/htmlToPDF/chunks/ directory.
 
-###Create the plugin htmlToPDF###
+### Create the plugin htmlToPDF
 Create a new plugin with the source of plugin.htmlToPDF.
 On the page "System Events" choose these two options in the area "Documents":
 
  * OnBeforeDocFormDelete
  * OnDocFormSave
 
-###Example Snippet Call###
+### Example Snippet Call
 
 Here is an example for a call to htmlToPDF:
 
@@ -70,7 +70,7 @@ Here is an example for a call to htmlToPDF:
         &chunkStyle=``pdf-style``  
      !]  
 
-###How to call the snippet###
+### How to call the snippet
 
 Place the snippet in the template of the document, where you want your readers 
 to download the content as PDF.
@@ -87,14 +87,14 @@ name of the chunk.
 
 PHX is available at http://modx.com/extras/package/phx
 
-###Link Generation###
+### Link Generation
 There is a chunk named pdf-link.txt that includes an example how to create a 
 link to the current document. The example looks like the following:
 
     <a href="[*id*]?isPDF=true"Download">Download as PDF</a>
 
 
-###Default Properties###
+### Default Properties
 
 The snippet default properties are only needed, if you want to set TCPDF,
 htmlToPDF, or the document output to other paths, as defined by default.
@@ -103,7 +103,7 @@ htmlToPDF snippet and add the following parameters to the field
 "Default Properties" and afterwards insert your paths:
 &basePath=The base path for TCPDF and htmlToPDF;string; &htmlToPdfPath=The path to the classes of htmlToPDF;string; &tcpdfPath=The path to TCPDF;string; &outputPdfPath=The path, where the PDF documents are stored. You need to give read, delete, and create rights to that folder (777).;string;
 
-###Parameters###
+### Parameters
 The following parameters are available:
 
 Name | Description | Possible Values | Default
