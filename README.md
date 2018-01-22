@@ -1,3 +1,7 @@
+# <span style="color: red;">This repository will not be maintained anymore</span>
+
+I don't work with MODX anymore.
+
 MODX-htmlToPDF
 ==============
 
@@ -68,23 +72,23 @@ Here is an example for a call to htmlToPDF:
 
 ###How to call the snippet###
 
-Place the snippet in the template of the document, where you want your readers 
+Place the snippet in the template of the document, where you want your readers
 to download the content as PDF.
 The advantage is, that you only have one call for all your documents.
 
-If you have documents where that you do not want to publish as PDF and you only 
-want to use one template, than try it with a template variable (TV) for this and 
+If you have documents where that you do not want to publish as PDF and you only
+want to use one template, than try it with a template variable (TV) for this and
 PHX for the call and put your call to htmlToPDF into a snippet:
 
      [+phx:if=`[*printPDF*]`:is=`1`:then=`{{snippetCAllhtmlToPDF}}`:else=``+]
 
-Where printPDF ist a possible name for the TV and snippetCAllhtmlToPDF is the 
+Where printPDF ist a possible name for the TV and snippetCAllhtmlToPDF is the
 name of the snippet.
 
 PHX is available at http://modx.com/extras/package/phx
 
 ###Link Generation###
-There is a chunk named pdf-link.txt that includes an example how to create a 
+There is a chunk named pdf-link.txt that includes an example how to create a
 link to the current document. The example looks like the following:
 
     <a href="[*id*]?isPDF=true"Download">Download as PDF</a>
